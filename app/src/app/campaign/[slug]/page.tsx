@@ -58,12 +58,12 @@ export default async function CampaignPage({
   const daysLeft = Math.max(0, Math.ceil((new Date(campaign.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
 
   return (
-    <div className="min-h-screen py-12 lg:py-20">
-      <div className="max-w-5xl mx-auto px-6">
+    <div className="min-h-screen pt-20 sm:pt-24 pb-12 lg:pb-20">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Back link */}
         <Link 
           href="/explore" 
-          className="inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-300 transition-colors mb-8"
+          className="inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-300 transition-colors mb-6 sm:mb-8 min-h-[44px]"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -71,7 +71,7 @@ export default async function CampaignPage({
           Back to projects
         </Link>
 
-        <div className="grid lg:grid-cols-5 gap-8">
+        <div className="grid lg:grid-cols-5 gap-6 sm:gap-8">
           {/* Main Content */}
           <div className="lg:col-span-3 space-y-8">
             {/* Header */}
@@ -83,7 +83,7 @@ export default async function CampaignPage({
                 <span className="text-xs text-zinc-600">•</span>
                 <span className="text-xs text-zinc-500">{daysLeft} days left</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-zinc-100 mb-3">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-zinc-100 mb-2 sm:mb-3">
                 {campaign.title}
               </h1>
               <div className="flex items-center gap-2">
@@ -108,11 +108,11 @@ export default async function CampaignPage({
                   />
                 </div>
               </div>
-              <div className="flex gap-3">
-                <button className="flex-1 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl">
+              <div className="flex gap-2 sm:gap-3">
+                <button className="flex-1 py-3 sm:py-2.5 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl min-h-[48px]">
                   Donate
                 </button>
-                <button className="px-4 py-2.5 text-sm font-medium text-zinc-400 bg-zinc-800 border border-zinc-700 rounded-xl">
+                <button className="px-4 py-3 sm:py-2.5 text-sm font-medium text-zinc-400 bg-zinc-800 border border-zinc-700 rounded-xl min-h-[48px]">
                   Share
                 </button>
               </div>

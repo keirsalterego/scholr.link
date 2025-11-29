@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CampaignCard } from "@/components/CampaignCard";
 import { BlinkPreview } from "@/components/BlinkPreview";
+import { SoulboundBadge3D } from "@/components/SoulboundBadge3D";
 
 // Mock featured campaigns
 const FEATURED_CAMPAIGNS = [
@@ -86,41 +87,41 @@ export default function Home() {
       <section className="relative overflow-hidden">
         {/* Enhanced gradient background */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#14f195]/8 via-[#9945ff]/3 to-transparent" />
-        <div className="absolute top-0 left-1/3 w-[700px] h-[700px] bg-[#14f195]/[0.08] rounded-full blur-[150px] animate-pulse-subtle" />
-        <div className="absolute top-40 right-1/4 w-[600px] h-[600px] bg-[#9945ff]/[0.06] rounded-full blur-[130px]" />
+        <div className="absolute top-0 left-1/3 w-[300px] sm:w-[500px] lg:w-[700px] h-[300px] sm:h-[500px] lg:h-[700px] bg-[#14f195]/[0.08] rounded-full blur-[100px] sm:blur-[150px] animate-pulse-subtle" />
+        <div className="absolute top-40 right-1/4 w-[250px] sm:w-[400px] lg:w-[600px] h-[250px] sm:h-[400px] lg:h-[600px] bg-[#9945ff]/[0.06] rounded-full blur-[100px] sm:blur-[130px]" />
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-[#14f195]/20 to-transparent" />
         
         {/* Grid pattern overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(20,241,149,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(20,241,149,0.03)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,black,transparent)]" />
         
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-20 pb-28 lg:pt-28 lg:pb-36">
-          <div className="grid lg:grid-cols-2 gap-20 lg:gap-16 items-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-16 sm:pt-20 pb-20 sm:pb-28 lg:pt-28 lg:pb-36">
+          <div className="grid lg:grid-cols-2 gap-10 sm:gap-16 lg:gap-16 items-center">
             {/* Left Content */}
             <div className="max-w-xl lg:max-w-lg animate-fade-in">
               {/* Headline */}
-              <h1 className="text-[42px] sm:text-[52px] lg:text-[60px] font-bold tracking-[-0.03em] leading-[1.08] mb-7">
+              <h1 className="text-[32px] sm:text-[42px] md:text-[52px] lg:text-[60px] font-bold tracking-[-0.03em] leading-[1.08] mb-5 sm:mb-7">
                 <span className="text-white">Fund research,</span>
                 <br />
                 <span className="text-gradient">directly from Twitter.</span>
               </h1>
 
               {/* Subheadline */}
-              <p className="text-[17px] text-zinc-400 leading-[1.7] mb-10 max-w-md animate-slide-up-delayed">
+              <p className="text-[15px] sm:text-[17px] text-zinc-400 leading-[1.7] mb-8 sm:mb-10 max-w-md animate-slide-up-delayed">
                 ScholrLink transforms social posts into instant funding portals. 
                 No forms, no friction—just tap, sign, and support the next breakthrough.
               </p>
 
               {/* CTA */}
-              <div className="flex flex-wrap items-center gap-4 animate-slide-up-delayed-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 animate-slide-up-delayed-2">
                 <Link
                   href="/dashboard"
-                  className="glass-button-primary px-7 py-3.5 text-[15px] font-semibold rounded-xl transition-all duration-300"
+                  className="glass-button-primary px-6 sm:px-7 py-3 sm:py-3.5 text-[14px] sm:text-[15px] font-semibold rounded-xl transition-all duration-300 text-center"
                 >
                   Start a Campaign
                 </Link>
                 <Link
                   href="/explore"
-                  className="glass-button-secondary px-7 py-3.5 text-[15px] rounded-xl transition-all duration-300"
+                  className="glass-button-secondary px-6 sm:px-7 py-3 sm:py-3.5 text-[14px] sm:text-[15px] rounded-xl transition-all duration-300 text-center"
                 >
                   Browse Projects
                 </Link>
@@ -139,9 +140,9 @@ export default function Home() {
       <section className="py-10 border-y border-[#1a1f2e]/50 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#14f195]/[0.02] to-transparent" />
         <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-16">
-            <span className="text-[11px] uppercase tracking-[0.25em] text-zinc-600 font-medium">Powered by</span>
-            <div className="flex items-center gap-10">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-16 scroll-reveal-subtle">
+            <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-zinc-600 font-medium">Powered by</span>
+            <div className="flex items-center gap-6 sm:gap-10">
               <span className="text-[14px] font-medium text-zinc-500 hover:text-[#14f195] transition-colors cursor-default">Solana</span>
               <span className="w-1 h-1 rounded-full bg-zinc-700" />
               <span className="text-[14px] font-medium text-zinc-500 hover:text-[#14f195] transition-colors cursor-default">Blinks</span>
@@ -158,17 +159,17 @@ export default function Home() {
         <div className="absolute top-20 left-0 w-[500px] h-[500px] bg-[#14f195]/[0.04] rounded-full blur-[150px] pointer-events-none" />
         <div className="absolute bottom-20 right-0 w-[400px] h-[400px] bg-[#9945ff]/[0.03] rounded-full blur-[120px] pointer-events-none" />
         
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
-          <div className="text-center mb-16 scroll-reveal">
-            <h2 className="text-[32px] sm:text-[38px] font-bold tracking-[-0.02em] text-white mb-5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative">
+          <div className="text-center mb-10 sm:mb-16 scroll-reveal">
+            <h2 className="text-[26px] sm:text-[32px] md:text-[38px] font-bold tracking-[-0.02em] text-white mb-4 sm:mb-5">
               How it works
             </h2>
-            <p className="text-zinc-400 max-w-lg mx-auto text-[16px] leading-relaxed">
+            <p className="text-zinc-400 max-w-lg mx-auto text-[14px] sm:text-[16px] leading-relaxed px-4 sm:px-0">
               Three simple steps to start funding your project through social media.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 scroll-reveal-stagger">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 scroll-wave">
             {[
               {
                 step: "01",
@@ -218,13 +219,13 @@ export default function Home() {
         {/* Grid lines */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(20,241,149,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(20,241,149,0.02)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_30%,black,transparent)]" />
         
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14 scroll-reveal">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6 mb-10 sm:mb-14 scroll-reveal">
             <div>
-              <h2 className="text-[32px] sm:text-[38px] font-bold tracking-[-0.02em] text-white mb-4">
+              <h2 className="text-[24px] sm:text-[32px] md:text-[38px] font-bold tracking-[-0.02em] text-white mb-3 sm:mb-4">
                 Active campaigns
               </h2>
-              <p className="text-zinc-400 text-[16px] leading-relaxed">Fund the next generation of student innovation</p>
+              <p className="text-zinc-400 text-[14px] sm:text-[16px] leading-relaxed">Fund the next generation of student innovation</p>
             </div>
             <Link
               href="/explore"
@@ -234,7 +235,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 scroll-reveal-stagger">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 scroll-cascade">
             {FEATURED_CAMPAIGNS.map((campaign) => (
               <CampaignCard key={campaign.slug} {...campaign} />
             ))}
@@ -253,25 +254,25 @@ export default function Home() {
         {/* Floating particles effect */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(20,241,149,0.03)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(153,69,255,0.03)_0%,transparent_50%)]" />
         
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative">
+          <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-center">
             {/* Left content */}
-            <div className="scroll-reveal-left">
-              <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-[11px] font-medium tracking-wide text-[#14f195] bg-[#14f195]/10 border border-[#14f195]/25 rounded-full">
+            <div className="scroll-reveal-elegant">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 mb-5 sm:mb-6 text-[10px] sm:text-[11px] font-medium tracking-wide text-[#14f195] bg-[#14f195]/10 border border-[#14f195]/25 rounded-full">
                 <span className="w-1.5 h-1.5 bg-[#14f195] rounded-full animate-pulse" />
                 Token-2022 Powered
               </div>
-              <h2 className="text-[32px] sm:text-[38px] font-bold tracking-[-0.02em] text-white mb-6 leading-[1.15]">
+              <h2 className="text-[26px] sm:text-[32px] md:text-[38px] font-bold tracking-[-0.02em] text-white mb-4 sm:mb-6 leading-[1.15]">
                 Build your on-chain
                 <span className="text-gradient"> reputation</span>
               </h2>
-              <p className="text-[16px] text-zinc-400 leading-[1.7] mb-10">
+              <p className="text-[14px] sm:text-[16px] text-zinc-400 leading-[1.7] mb-8 sm:mb-10">
                 Every donation mints a Soulbound NFT to your wallet—permanent, 
                 non-transferable proof that you believed in innovation before it happened.
               </p>
               
               {/* Feature grid */}
-              <div className="grid sm:grid-cols-2 gap-4 mb-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-8 sm:mb-10">
                 {[
                   { title: "Soulbound", desc: "Non-transferable & permanent" },
                   { title: "Visible", desc: "Public on-chain portfolio" },
@@ -299,183 +300,201 @@ export default function Home() {
               </Link>
             </div>
             
-            {/* Right - Badge showcase */}
-            <div className="relative scroll-reveal-right">
-              {/* Decorative ring */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-80 h-80 rounded-full border border-[#14f195]/10 opacity-60 animate-pulse-subtle" />
-                <div className="absolute w-64 h-64 rounded-full border border-[#9945ff]/10" />
-              </div>
-              
-              {/* Main badge card */}
-              <div className="relative max-w-sm mx-auto">
-                <div className="glass-card rounded-2xl p-7 shadow-2xl gradient-border">
-                  {/* Badge visual */}
-                  <div className="aspect-square rounded-xl bg-gradient-to-br from-[#14f195]/15 via-[#0f1117] to-[#9945ff]/15 border border-zinc-700/30 p-6 mb-6 relative overflow-hidden">
-                    {/* Animated glow */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#14f195]/8 to-[#9945ff]/8 animate-pulse" />
-                    
-                    <div className="relative h-full flex flex-col items-center justify-center">
-                      <div className="w-18 h-18 rounded-xl bg-gradient-to-br from-[#14f195] to-[#9945ff] flex items-center justify-center mb-4 shadow-lg shadow-[#14f195]/25 p-4">
-                        <span className="text-2xl font-bold text-[#0a0a0f]">SB</span>
-                      </div>
-                      <span className="text-[10px] font-medium text-[#14f195] uppercase tracking-[0.15em] mb-2">Patron Badge</span>
-                      <span className="text-xl font-semibold text-white tracking-tight">#0142</span>
-                    </div>
-                  </div>
-                  
-                  {/* Badge info */}
-                  <div className="text-center mb-5">
-                    <h4 className="font-semibold text-white text-[16px] mb-1.5 tracking-[-0.01em]">Climate ML Research</h4>
-                    <p className="text-[13px] text-zinc-500">Supported by sarahchen.sol</p>
-                  </div>
-                  
-                  {/* Badge metadata */}
-                  {/* Badge metadata */}
-                  <div className="flex items-center justify-between p-4 bg-zinc-800/40 rounded-xl">
-                    <div className="text-center">
-                      <p className="text-[10px] text-zinc-500 mb-1">Tier</p>
-                      <p className="text-[14px] font-medium text-[#14f195]">Early Believer</p>
-                    </div>
-                    <div className="w-px h-10 bg-zinc-700/50" />
-                    <div className="text-center">
-                      <p className="text-[10px] text-zinc-500 mb-1">Amount</p>
-                      <p className="text-[14px] font-medium text-white">25 USDC</p>
-                    </div>
-                    <div className="w-px h-10 bg-zinc-700/50" />
-                    <div className="text-center">
-                      <p className="text-[10px] text-zinc-500 mb-1">Date</p>
-                      <p className="text-[14px] font-medium text-white">Nov 24</p>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Floating soulbound indicator */}
-                <div className="absolute -top-3 -right-3 px-4 py-2 bg-gradient-to-r from-[#14f195] to-[#00d4aa] text-[#0a0a0f] text-[11px] font-bold rounded-full shadow-lg shadow-[#14f195]/30 animate-float-delayed">
-                  SOULBOUND
-                </div>
-              </div>
-            </div>
+            {/* Right - 3D Badge showcase */}
+            <SoulboundBadge3D />
           </div>
         </div>
       </section>
 
-      {/* Donor Leaderboard Section */}
-      <section className="py-24 lg:py-32 section-bg-mesh relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#14f195]/[0.04] rounded-full blur-[150px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#9945ff]/[0.03] rounded-full blur-[120px] pointer-events-none" />
+      {/* Donor Leaderboard & Patron Tiers Section */}
+      <section className="py-28 lg:py-36 relative overflow-hidden">
+        {/* Sophisticated background */}
+        <div className="absolute inset-0 bg-[#0a0a0f]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_100%_100%_at_70%_0%,rgba(20,241,149,0.04),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_20%_100%,rgba(153,69,255,0.03),transparent_50%)]" />
         
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
+        {/* Subtle grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:80px_80px]" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative">
+          <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-28">
+            
             {/* Left - Leaderboard */}
             <div className="scroll-reveal-left">
-              <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-[11px] font-medium tracking-wide text-[#14f195] bg-[#14f195]/10 border border-[#14f195]/25 rounded-full">
-                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                Top Patrons
+              {/* Section header */}
+              <div className="mb-8 sm:mb-10">
+                <div className="flex items-center gap-3 mb-4 sm:mb-5">
+                  <div className="h-px w-8 bg-gradient-to-r from-[#14f195] to-transparent" />
+                  <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] text-[#14f195]">
+                    Top Contributors
+                  </span>
+                </div>
+                <h2 className="text-[28px] sm:text-[36px] md:text-[44px] font-bold tracking-[-0.03em] text-white leading-[1.1] mb-3 sm:mb-4">
+                  Donor <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#14f195] to-[#9945ff]">Leaderboard</span>
+                </h2>
+                <p className="text-[15px] text-zinc-500 leading-relaxed max-w-md">
+                  Compete for the top spot. The most generous patrons earn recognition, 
+                  exclusive badges, and bragging rights on-chain.
+                </p>
               </div>
-              <h2 className="text-[32px] sm:text-[38px] font-bold tracking-[-0.02em] text-white mb-5 leading-[1.15]">
-                Donor <span className="text-gradient">Leaderboard</span>
-              </h2>
-              <p className="text-[16px] text-zinc-400 leading-[1.7] mb-10">
-                Compete for the top spot. The most generous patrons earn recognition, 
-                exclusive badges, and bragging rights on-chain.
-              </p>
 
-              {/* Leaderboard Table */}
-              <div className="glass-card rounded-2xl overflow-hidden">
-                <div className="p-4 border-b border-[#1a1f2e] flex items-center justify-between">
-                  <span className="text-[13px] font-medium text-zinc-400">This Month</span>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-[#14f195] rounded-full animate-pulse" />
-                    <span className="text-[12px] text-zinc-500">Live</span>
-                  </div>
-                </div>
-                <div className="divide-y divide-[#1a1f2e]">
-                  {TOP_DONORS.map((donor, i) => (
-                    <div key={i} className="flex items-center gap-4 p-4 hover:bg-white/[0.02] transition-colors">
-                      {/* Rank */}
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-bold ${
-                        donor.rank === 1 ? "bg-gradient-to-br from-yellow-500 to-amber-500 text-[#0a0a0f]" :
-                        donor.rank === 2 ? "bg-gradient-to-br from-zinc-400 to-zinc-300 text-[#0a0a0f]" :
-                        donor.rank === 3 ? "bg-gradient-to-br from-amber-700 to-amber-500 text-white" :
-                        "bg-zinc-800 text-zinc-400"
-                      }`}>
-                        {donor.rank}
-                      </div>
-                      
-                      {/* Avatar */}
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#14f195] to-[#9945ff] flex items-center justify-center text-[#0a0a0f] font-bold text-[14px]">
-                        {donor.avatar}
-                      </div>
-                      
-                      {/* Info */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[14px] font-medium text-white truncate">{donor.address}</span>
-                          <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full ${
-                            donor.badge === "Platinum" ? "bg-cyan-500/20 text-cyan-400" :
-                            donor.badge === "Gold" ? "bg-yellow-500/20 text-yellow-400" :
-                            "bg-zinc-500/20 text-zinc-400"
-                          }`}>
-                            {donor.badge}
-                          </span>
-                        </div>
-                        <span className="text-[12px] text-zinc-500">{donor.projects} projects supported</span>
-                      </div>
-                      
-                      {/* Amount */}
-                      <div className="text-right">
-                        <span className="text-[16px] font-semibold text-[#14f195]">${donor.amount}</span>
-                        <p className="text-[11px] text-zinc-500">USDC</p>
-                      </div>
+              {/* Leaderboard Card */}
+              <div className="relative">
+                {/* Glow effect */}
+                <div className="absolute -inset-px bg-gradient-to-b from-white/[0.08] to-transparent rounded-2xl blur-sm" />
+                
+                <div className="relative bg-[#0d0d12] border border-white/[0.06] rounded-2xl overflow-hidden">
+                  {/* Header */}
+                  <div className="px-6 py-4 border-b border-white/[0.04] flex items-center justify-between">
+                    <span className="text-[13px] font-medium text-zinc-400">This Month</span>
+                    <div className="flex items-center gap-2">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#14f195] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#14f195]"></span>
+                      </span>
+                      <span className="text-[11px] font-medium text-zinc-500">Live</span>
                     </div>
-                  ))}
-                </div>
-                <div className="p-4 border-t border-[#1a1f2e]">
-                  <Link href="/leaderboard" className="text-[13px] font-medium text-[#14f195] hover:text-[#2fff9f] transition-colors">
-                    View full leaderboard →
-                  </Link>
+                  </div>
+                  
+                  {/* Donor rows */}
+                  <div className="divide-y divide-white/[0.03]">
+                    {TOP_DONORS.map((donor, i) => (
+                      <div 
+                        key={i} 
+                        className={`group flex items-center gap-5 px-6 py-4 transition-all duration-300 hover:bg-white/[0.02] ${
+                          i === 0 ? "bg-gradient-to-r from-[#14f195]/[0.04] to-transparent" : ""
+                        }`}
+                      >
+                        {/* Rank indicator */}
+                        <div className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-bold transition-transform duration-300 group-hover:scale-110 ${
+                          donor.rank === 1 
+                            ? "bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 text-[#0a0a0f] shadow-lg shadow-amber-500/20" 
+                            : donor.rank === 2 
+                              ? "bg-gradient-to-br from-zinc-300 via-zinc-200 to-zinc-400 text-[#0a0a0f]" 
+                              : donor.rank === 3 
+                                ? "bg-gradient-to-br from-amber-600 via-amber-700 to-amber-800 text-amber-100" 
+                                : "bg-zinc-800/80 text-zinc-500"
+                        }`}>
+                          {donor.rank}
+                        </div>
+                        
+                        {/* Avatar */}
+                        <div className={`flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-[14px] font-semibold transition-transform duration-300 group-hover:scale-105 ${
+                          donor.rank === 1 
+                            ? "bg-gradient-to-br from-[#14f195] to-[#00d4aa] text-[#0a0a0f]" 
+                            : "bg-gradient-to-br from-zinc-700 to-zinc-800 text-zinc-300"
+                        }`}>
+                          {donor.avatar}
+                        </div>
+                        
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2.5 mb-0.5">
+                            <span className="text-[14px] font-semibold text-white truncate">{donor.address}</span>
+                            <span className={`px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-md ${
+                              donor.badge === "Platinum" 
+                                ? "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-400 border border-cyan-500/20" 
+                                : donor.badge === "Gold" 
+                                  ? "bg-gradient-to-r from-yellow-500/20 to-amber-500/20 text-yellow-400 border border-yellow-500/20" 
+                                  : "bg-zinc-800 text-zinc-400 border border-zinc-700"
+                            }`}>
+                              {donor.badge}
+                            </span>
+                          </div>
+                          <span className="text-[12px] text-zinc-600">{donor.projects} projects supported</span>
+                        </div>
+                        
+                        {/* Amount */}
+                        <div className="text-right">
+                          <span className={`text-[18px] font-bold tracking-tight ${
+                            donor.rank === 1 ? "text-[#14f195]" : "text-white"
+                          }`}>${donor.amount.toLocaleString()}</span>
+                          <p className="text-[10px] font-medium text-zinc-600 uppercase tracking-wider">USDC</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Footer */}
+                  <div className="px-6 py-4 border-t border-white/[0.04] bg-white/[0.01]">
+                    <Link 
+                      href="/leaderboard" 
+                      className="inline-flex items-center gap-2 text-[13px] font-medium text-zinc-400 hover:text-[#14f195] transition-colors group"
+                    >
+                      View full leaderboard
+                      <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Right - Patron Tiers */}
             <div className="scroll-reveal-right">
-              <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-[11px] font-medium tracking-wide text-[#9945ff] bg-[#9945ff]/10 border border-[#9945ff]/25 rounded-full">
-                Soulbound Tiers
+              {/* Section header */}
+              <div className="mb-8 sm:mb-10">
+                <div className="flex items-center gap-3 mb-4 sm:mb-5">
+                  <div className="h-px w-8 bg-gradient-to-r from-[#9945ff] to-transparent" />
+                  <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] text-[#9945ff]">
+                    Soulbound Badges
+                  </span>
+                </div>
+                <h2 className="text-[28px] sm:text-[36px] md:text-[44px] font-bold tracking-[-0.03em] text-white leading-[1.1] mb-3 sm:mb-4">
+                  Level up your <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9945ff] to-[#14f195]">reputation</span>
+                </h2>
+                <p className="text-[15px] text-zinc-500 leading-relaxed max-w-md">
+                  Earn non-transferable badges based on your lifetime contributions. 
+                  Higher tiers unlock exclusive perks and voting power.
+                </p>
               </div>
-              <h2 className="text-[32px] sm:text-[38px] font-bold tracking-[-0.02em] text-white mb-5 leading-[1.15]">
-                Level up your <span className="text-gradient">reputation</span>
-              </h2>
-              <p className="text-[16px] text-zinc-400 leading-[1.7] mb-10">
-                Earn non-transferable badges based on your lifetime contributions. 
-                Higher tiers unlock exclusive perks and voting power.
-              </p>
 
-              {/* Tier Cards */}
-              <div className="grid grid-cols-2 gap-4">
+              {/* Tier Grid */}
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4">
                 {PATRON_TIERS.map((tier, i) => (
-                  <div key={i} className="glass-card p-5 rounded-xl hover-lift group relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <div className="relative">
-                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center mb-4 shadow-lg`}>
-                        <span className="text-[16px] font-bold text-white drop-shadow">{tier.name[0]}</span>
-                      </div>
-                      <h4 className="text-[15px] font-semibold text-white mb-1">{tier.name}</h4>
-                      <p className="text-[12px] text-zinc-500 mb-3">${tier.minAmount}+ lifetime</p>
-                      <div className="space-y-1.5">
-                        {tier.perks.slice(0, 2).map((perk, j) => (
-                          <div key={j} className="flex items-center gap-2 text-[11px] text-zinc-400">
-                            <span className="w-1 h-1 rounded-full bg-[#14f195]" />
-                            {perk}
-                          </div>
-                        ))}
-                      </div>
+                  <div 
+                    key={i} 
+                    className="group relative p-5 rounded-2xl bg-[#0d0d12] border border-white/[0.04] hover:border-white/[0.08] transition-all duration-500 hover:-translate-y-1"
+                  >
+                    {/* Hover glow */}
+                    <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br ${tier.color} blur-xl -z-10`} style={{ opacity: 0 }} />
+                    <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500 bg-gradient-to-br from-white to-transparent" />
+                    
+                    {/* Tier badge */}
+                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${tier.color} flex items-center justify-center mb-5 shadow-xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}>
+                      <span className="text-[18px] font-bold text-white drop-shadow-lg">{tier.name[0]}</span>
+                    </div>
+                    
+                    {/* Tier info */}
+                    <h4 className="text-[17px] font-semibold text-white mb-1 tracking-tight">{tier.name}</h4>
+                    <p className="text-[12px] text-zinc-600 mb-4 font-medium">${tier.minAmount}+ lifetime</p>
+                    
+                    {/* Perks */}
+                    <div className="space-y-2">
+                      {tier.perks.slice(0, 2).map((perk, j) => (
+                        <div key={j} className="flex items-center gap-2.5">
+                          <span className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${tier.color}`} />
+                          <span className="text-[12px] text-zinc-400">{perk}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}
+              </div>
+              
+              {/* Bottom CTA */}
+              <div className="mt-8 p-5 rounded-2xl bg-gradient-to-r from-[#14f195]/[0.05] to-[#9945ff]/[0.05] border border-white/[0.04]">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[14px] font-medium text-white mb-1">Ready to level up?</p>
+                    <p className="text-[12px] text-zinc-500">Support a project and earn your first badge</p>
+                  </div>
+                  <Link 
+                    href="/explore" 
+                    className="flex-shrink-0 px-5 py-2.5 bg-white text-[#0a0a0f] text-[12px] font-semibold rounded-xl hover:bg-zinc-100 transition-colors"
+                  >
+                    Explore Projects
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -486,24 +505,24 @@ export default function Home() {
       <section className="py-24 lg:py-32 section-bg-gradient relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-[#14f195]/4 to-transparent rounded-full blur-[100px] pointer-events-none" />
         
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
-          <div className="text-center mb-14 scroll-reveal">
-            <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-[11px] font-medium tracking-wide text-orange-400 bg-orange-500/10 border border-orange-500/25 rounded-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative">
+          <div className="text-center mb-10 sm:mb-14 scroll-reveal">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 mb-5 sm:mb-6 text-[10px] sm:text-[11px] font-medium tracking-wide text-orange-400 bg-orange-500/10 border border-orange-500/25 rounded-full">
               <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd" />
               </svg>
               Trending Now
             </div>
-            <h2 className="text-[32px] sm:text-[38px] font-bold tracking-[-0.02em] text-white mb-5">
+            <h2 className="text-[26px] sm:text-[32px] md:text-[38px] font-bold tracking-[-0.02em] text-white mb-4 sm:mb-5">
               Projects going <span className="text-gradient">viral</span>
             </h2>
-            <p className="text-zinc-400 max-w-lg mx-auto text-[16px] leading-relaxed">
+            <p className="text-zinc-400 max-w-lg mx-auto text-[14px] sm:text-[16px] leading-relaxed px-4 sm:px-0">
               Discover the hottest student projects gaining traction right now. 
               Ranked by views, donations, and community engagement.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 scroll-reveal-stagger">
+          <div className="grid md:grid-cols-3 gap-6 scroll-wave">
             {TRENDING_PROJECTS.map((project, i) => (
               <div key={i} className="glass-card p-6 rounded-2xl hover-lift group relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-[#14f195]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -566,14 +585,14 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f] via-[#0d0f15] to-[#0a0a0f]" />
         <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#14f195]/5 rounded-full blur-[150px] pointer-events-none" />
         
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative">
+          <div className="grid lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-20 items-center">
             {/* Left - Content */}
-            <div className="scroll-reveal-left">
-              <div className="inline-flex items-center px-4 py-2 mb-6 text-[11px] font-medium tracking-wide text-[#14f195] bg-[#14f195]/10 border border-[#14f195]/25 rounded-full">
+            <div className="scroll-reveal-flip">
+              <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 mb-5 sm:mb-6 text-[10px] sm:text-[11px] font-medium tracking-wide text-[#14f195] bg-[#14f195]/10 border border-[#14f195]/25 rounded-full">
                 Real-Time Updates
               </div>
-              <h2 className="text-[32px] sm:text-[42px] font-bold tracking-[-0.02em] text-white mb-6 leading-[1.1]">
+              <h2 className="text-[26px] sm:text-[32px] md:text-[42px] font-bold tracking-[-0.02em] text-white mb-4 sm:mb-6 leading-[1.1]">
                 Milestone updates,<br />
                 <span className="text-gradient">delivered instantly</span>
               </h2>
@@ -604,7 +623,7 @@ export default function Home() {
             </div>
 
             {/* Right - Mock Updates Feed */}
-            <div className="scroll-reveal-right">
+            <div className="scroll-reveal-glow">
               <div className="glass-card rounded-2xl overflow-hidden shadow-2xl shadow-black/20">
                 {/* Header */}
                 <div className="px-6 py-5 border-b border-[#1a1f2e] flex items-center justify-between bg-zinc-900/30">
@@ -667,8 +686,8 @@ export default function Home() {
       {/* Footer */}
       <footer className="py-12 border-t border-[#1a1f2e] relative">
         <div className="absolute inset-0 bg-gradient-to-t from-[#14f195]/[0.02] to-transparent" />
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative">
+          <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 text-center scroll-reveal-subtle">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#14f195] to-[#9945ff] flex items-center justify-center text-[#0a0a0f] font-bold text-[14px] shadow-lg shadow-[#14f195]/20">
                 S

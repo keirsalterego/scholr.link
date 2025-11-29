@@ -49,7 +49,7 @@ export function CampaignCard({
     <Link href={`/campaign/${slug}`} className="group block">
       <article className="glass-card h-full rounded-xl overflow-hidden hover-lift">
         {/* Image/Thumbnail */}
-        <div className="relative h-36 bg-gradient-to-br from-[#111113] via-[#141416] to-[#111113] overflow-hidden">
+        <div className="relative h-28 sm:h-32 md:h-36 bg-gradient-to-br from-[#111113] via-[#141416] to-[#111113] overflow-hidden">
           {/* Animated background gradient */}
           <div className={`absolute inset-0 bg-gradient-to-br ${colors.gradient} group-hover:opacity-100 opacity-50 transition-all duration-500`} />
           
@@ -97,12 +97,12 @@ export function CampaignCard({
                 style={{ width: `${Math.min(percentRaised, 100)}%` }}
               />
             </div>
-            <div className="flex justify-between mt-2.5">
+            <div className="flex justify-between mt-2 sm:mt-2.5">
               <div className="flex items-baseline gap-1">
-                <span className="text-[15px] font-semibold text-white tracking-tight">${raised}</span>
-                <span className="text-[12px] text-zinc-500">raised</span>
+                <span className="text-[14px] sm:text-[15px] font-semibold text-white tracking-tight">${raised}</span>
+                <span className="text-[11px] sm:text-[12px] text-zinc-500">raised</span>
               </div>
-              <span className="text-[12px] text-zinc-500">of ${goal}</span>
+              <span className="text-[11px] sm:text-[12px] text-zinc-500">of ${goal}</span>
             </div>
           </div>
 

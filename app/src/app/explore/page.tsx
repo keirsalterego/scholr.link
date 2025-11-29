@@ -69,25 +69,25 @@ const CATEGORIES = [
 
 export default function ExplorePage() {
   return (
-    <div className="min-h-screen py-12 lg:py-20">
-      <div className="max-w-6xl mx-auto px-6">
+    <div className="min-h-screen pt-20 sm:pt-24 pb-12 lg:pb-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-100 mb-3">
+        <div className="mb-8 sm:mb-10">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-zinc-100 mb-2 sm:mb-3">
             Explore projects
           </h1>
-          <p className="text-zinc-500 max-w-lg">
+          <p className="text-zinc-500 text-sm sm:text-base max-w-lg">
             Discover student-led innovation and support projects that matter. 
             Every contribution earns you a soulbound Patron Badge.
           </p>
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex items-center gap-2 mb-6 sm:mb-8 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
-              className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+              className={`px-3 sm:px-4 py-2.5 sm:py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors min-h-[44px] ${
                 cat.id === "all"
                   ? "bg-zinc-100 text-zinc-900"
                   : "bg-zinc-900 text-zinc-400 border border-zinc-800 hover:bg-zinc-800 hover:text-zinc-300"
@@ -104,15 +104,15 @@ export default function ExplorePage() {
         </div>
 
         {/* Campaign Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {ALL_CAMPAIGNS.map((campaign) => (
             <CampaignCard key={campaign.slug} {...campaign} />
           ))}
         </div>
 
         {/* Load More */}
-        <div className="mt-12 text-center">
-          <button className="px-6 py-3 text-sm font-medium text-zinc-400 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:text-zinc-300 rounded-xl transition-colors">
+        <div className="mt-10 sm:mt-12 text-center">
+          <button className="w-full sm:w-auto px-6 py-3 text-sm font-medium text-zinc-400 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:text-zinc-300 rounded-xl transition-colors min-h-[48px]">
             Load more
           </button>
         </div>

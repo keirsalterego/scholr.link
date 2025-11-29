@@ -19,7 +19,57 @@ export function BlinkPreview() {
   const amounts = [5, 10, 25, 50];
 
   return (
-    <div
+    <>
+      {/* Mobile Simplified Preview */}
+      <div className="lg:hidden relative">
+        <div className="bg-black rounded-2xl overflow-hidden shadow-2xl border border-[#2f3336] max-w-sm mx-auto">
+          {/* Simple Blink Card for Mobile */}
+          <div className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#14f195] via-[#00d4aa] to-[#9945ff]" />
+              <div>
+                <p className="font-bold text-[15px] text-white">Sarah Chen</p>
+                <p className="text-[13px] text-[#71767b]">@sarahchen</p>
+              </div>
+            </div>
+            <p className="text-[15px] text-white leading-[20px] mb-4">
+              Excited to share my climate prediction research! 🌍🔬
+            </p>
+            
+            {/* Blink Card */}
+            <div className="border border-[#2f3336] rounded-xl overflow-hidden">
+              <div className="h-20 bg-gradient-to-br from-[#14f195]/10 via-[#0a0a0b] to-[#9945ff]/10 flex items-center justify-between px-4">
+                <div>
+                  <p className="text-[10px] text-white/50 uppercase tracking-wider">Research Fund</p>
+                  <p className="text-lg font-semibold text-white">Climate ML Research</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-xl font-semibold text-white">25%</p>
+                </div>
+              </div>
+              <div className="bg-black p-4">
+                <div className="grid grid-cols-4 gap-2 mb-3">
+                  {amounts.map((amount) => (
+                    <button
+                      key={amount}
+                      onClick={() => setSelectedAmount(amount)}
+                      className={`py-2 text-sm font-medium rounded-lg transition-all ${selectedAmount === amount ? 'bg-white text-black' : 'bg-[#1f1f23] text-white'}`}
+                    >
+                      {amount}
+                    </button>
+                  ))}
+                </div>
+                <button className="glass-button-primary w-full py-3 text-white font-semibold rounded-xl">
+                  Donate {selectedAmount || '...'} USDC
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Full Preview */}
+      <div
       ref={containerRef}
       className="hidden lg:block relative"
       onMouseMove={handleMouseMove}
@@ -241,5 +291,6 @@ export function BlinkPreview() {
         </div>
       </div>
     </div>
+    </>
   );
 }

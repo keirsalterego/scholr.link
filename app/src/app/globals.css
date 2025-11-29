@@ -26,6 +26,41 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
+}
+
+/* Mobile touch improvements */
+@media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Reduce motion on mobile for performance */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Safe area insets for notched devices */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Touch-friendly target sizes */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
 }
 
 * {
@@ -40,6 +75,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   letter-spacing: -0.01em;
   line-height: 1.5;
+  /* Prevent horizontal scroll */
+  overflow-x: hidden;
 }
 
 /* Custom scrollbar */
@@ -79,49 +116,109 @@ button {
   cursor: pointer;
 }
 
-/* Wallet adapter overrides */
+/* ========================================
+   WALLET ADAPTER STYLES - Clean Override
+   ======================================== */
+
+/* Button styling */
 .wallet-adapter-button {
-  background: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 12px !important;
-  font-weight: 500 !important;
-  font-size: 14px !important;
-  height: 44px !important;
-  padding: 0 20px !important;
-  color: #fff !important;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 13px;
+  height: 40px;
+  padding: 0 16px;
+  color: #fff;
+  transition: all 0.2s ease;
+  font-family: inherit;
 }
 
 .wallet-adapter-button:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(20, 241, 149, 0.4);
 }
 
-.wallet-adapter-modal-wrapper {
-  background: rgba(0, 0, 0, 0.8) !important;
-  backdrop-filter: blur(20px) !important;
+/* Modal overlay */
+.wallet-adapter-modal-overlay {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
 }
 
+/* Modal container */
 .wallet-adapter-modal-container {
-  background: rgba(24, 24, 27, 0.95) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 20px !important;
+  background: #111115;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
+/* Modal title */
 .wallet-adapter-modal-title {
-  color: #fafafa !important;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 18px;
+  text-align: center;
+  padding: 20px 20px 10px 20px;
+}
+
+/* Wallet list */
+.wallet-adapter-modal-list {
+  padding: 10px 16px 16px 16px;
 }
 
 .wallet-adapter-modal-list li {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-radius: 12px !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
 }
 
 .wallet-adapter-modal-list li:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(20, 241, 149, 0.1);
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button {
+  background: transparent;
+  border: none;
+  width: 100%;
+  height: 52px;
+  padding: 0 14px;
+  justify-content: flex-start;
+  gap: 12px;
+  font-size: 15px;
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button:hover {
+  background: transparent;
+}
+
+/* Wallet icons */
+.wallet-adapter-button-start-icon img {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+/* Close button */
+.wallet-adapter-modal-button-close {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.wallet-adapter-modal-button-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.wallet-adapter-modal-button-close svg {
+  fill: #999;
+}
+
+/* Collapse/More options */
+.wallet-adapter-modal-list-more {
+  color: #14f195;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 /* Animation keyframes */
@@ -170,12 +267,184 @@ button {
   100% { opacity: 1; transform: scale(1); }
 }
 
-/* Scroll-triggered animations */
+/* ========================================
+   3D BADGE CARD ANIMATIONS
+   ======================================== */
+
+/* Perspective container */
+.perspective-1000 {
+  perspective: 1000px;
+  perspective-origin: center center;
+}
+
+/* 3D wrapper for the floating/tilting effect */
+.badge-3d-wrapper {
+  transform-style: preserve-3d;
+}
+
+/* Main 3D card with continuous tilt animation */
+.badge-3d-card {
+  transform-style: preserve-3d;
+  animation: badge-float-tilt 8s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* The emblem inside floats separately */
+.badge-emblem {
+  animation: emblem-float 3s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+/* Floating tag animation */
+.badge-floating-tag {
+  animation: tag-orbit 8s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+/* Holographic shimmer */
+@keyframes holographic {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateX(-100%) rotate(45deg);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+.animate-holographic {
+  animation: holographic 4s ease-in-out infinite;
+}
+
+/* Main badge float and tilt animation - like Comet's 3D cards */
+@keyframes badge-float-tilt {
+  0%, 100% {
+    transform: 
+      translateY(0px) 
+      rotateX(8deg) 
+      rotateY(-8deg) 
+      rotateZ(0deg)
+      scale(1);
+  }
+  25% {
+    transform: 
+      translateY(-12px) 
+      rotateX(4deg) 
+      rotateY(6deg) 
+      rotateZ(1deg)
+      scale(1.01);
+  }
+  50% {
+    transform: 
+      translateY(-8px) 
+      rotateX(-4deg) 
+      rotateY(8deg) 
+      rotateZ(-0.5deg)
+      scale(1.02);
+  }
+  75% {
+    transform: 
+      translateY(-14px) 
+      rotateX(6deg) 
+      rotateY(-4deg) 
+      rotateZ(0.5deg)
+      scale(1.01);
+  }
+}
+
+/* Inner emblem float - subtle bobbing */
+@keyframes emblem-float {
+  0%, 100% {
+    transform: translateY(0px) translateZ(20px);
+  }
+  50% {
+    transform: translateY(-6px) translateZ(30px);
+  }
+}
+
+/* Orbiting tag animation */
+@keyframes tag-orbit {
+  0%, 100% {
+    transform: translateY(0px) translateZ(40px) rotateZ(-3deg);
+  }
+  25% {
+    transform: translateY(-8px) translateZ(50px) rotateZ(0deg);
+  }
+  50% {
+    transform: translateY(-4px) translateZ(45px) rotateZ(3deg);
+  }
+  75% {
+    transform: translateY(-10px) translateZ(55px) rotateZ(0deg);
+  }
+}
+
+/* Slow spin for decorative rings */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 40s linear infinite;
+}
+
+@keyframes reverse-spin-slow {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.animate-reverse-spin-slow {
+  animation: reverse-spin-slow 50s linear infinite;
+}
+
+/* Orbiting particles for premium badge */
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateX(160px) rotate(0deg);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(360deg) translateX(160px) rotate(-360deg);
+    opacity: 0.8;
+  }
+}
+
+.animate-orbit {
+  animation: orbit 12s linear infinite;
+}
+
+/* Premium shimmer rotation */
+@keyframes shimmer-rotate {
+  0% {
+    --shimmer-angle: 0deg;
+  }
+  100% {
+    --shimmer-angle: 360deg;
+  }
+}
+
+.animate-shimmer-rotate {
+  animation: shimmer-rotate 8s linear infinite;
+}
+
+@property --shimmer-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Scroll-triggered animations - Modern & Professional */
+
+/* Primary reveal - smooth upward motion with subtle blur */
 @keyframes reveal-up {
   from {
     opacity: 0;
-    transform: translateY(60px);
-    filter: blur(10px);
+    transform: translateY(40px);
+    filter: blur(4px);
   }
   to {
     opacity: 1;
@@ -184,10 +453,11 @@ button {
   }
 }
 
+/* Subtle reveal - minimal movement, quick fade */
 @keyframes reveal-up-subtle {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -195,11 +465,12 @@ button {
   }
 }
 
+/* Scale reveal - zoom effect with blur */
 @keyframes reveal-scale {
   from {
     opacity: 0;
-    transform: scale(0.92);
-    filter: blur(8px);
+    transform: scale(0.95);
+    filter: blur(6px);
   }
   to {
     opacity: 1;
@@ -208,11 +479,12 @@ button {
   }
 }
 
+/* Horizontal reveals */
 @keyframes reveal-left {
   from {
     opacity: 0;
-    transform: translateX(-50px);
-    filter: blur(6px);
+    transform: translateX(-40px);
+    filter: blur(4px);
   }
   to {
     opacity: 1;
@@ -224,8 +496,8 @@ button {
 @keyframes reveal-right {
   from {
     opacity: 0;
-    transform: translateX(50px);
-    filter: blur(6px);
+    transform: translateX(40px);
+    filter: blur(4px);
   }
   to {
     opacity: 1;
@@ -234,10 +506,11 @@ button {
   }
 }
 
+/* Rotate reveal - subtle tilt entry */
 @keyframes reveal-rotate {
   from {
     opacity: 0;
-    transform: translateY(40px) rotate(-3deg);
+    transform: translateY(30px) rotate(-2deg);
   }
   to {
     opacity: 1;
@@ -245,6 +518,7 @@ button {
   }
 }
 
+/* Mask reveal - clip path animation */
 @keyframes reveal-mask {
   from {
     opacity: 0;
@@ -256,109 +530,273 @@ button {
   }
 }
 
-@keyframes counter-scroll {
+/* NEW: Elegant fade with scale */
+@keyframes reveal-elegant {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* NEW: Split reveal - for text/headings */
+@keyframes reveal-split {
   from {
-    transform: translateY(100px);
+    opacity: 0;
+    transform: translateY(100%);
   }
   to {
-    transform: translateY(-100px);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Scroll animation classes - uses animation-timeline for native scroll */
+/* NEW: Glow reveal - elements that glow in */
+@keyframes reveal-glow {
+  0% {
+    opacity: 0;
+    transform: translateY(25px);
+    filter: blur(8px) brightness(1.5);
+  }
+  50% {
+    filter: blur(0) brightness(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0) brightness(1);
+  }
+}
+
+/* NEW: 3D flip reveal */
+@keyframes reveal-flip {
+  from {
+    opacity: 0;
+    transform: perspective(600px) rotateX(-15deg) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(600px) rotateX(0) translateY(0);
+  }
+}
+
+/* NEW: Draw line animation for decorative elements */
+@keyframes reveal-line {
+  from {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  to {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}
+
+/* Parallax counter-scroll */
+@keyframes counter-scroll {
+  from {
+    transform: translateY(80px);
+  }
+  to {
+    transform: translateY(-80px);
+  }
+}
+
+/* ========================================
+   SCROLL ANIMATION CLASSES
+   Modern, Professional, Performant
+   ======================================== */
+
+/* Custom easing functions */
+:root {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Primary scroll reveal - smooth professional entry */
 .scroll-reveal {
   opacity: 0;
-  animation: reveal-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: reveal-up 0.8s var(--ease-out-expo) forwards;
   animation-timeline: view();
-  animation-range: entry 0% cover 35%;
+  animation-range: entry 0% cover 30%;
 }
 
+/* Subtle reveal - quick, minimal */
 .scroll-reveal-subtle {
   opacity: 0;
-  animation: reveal-up-subtle 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: reveal-up-subtle 0.6s var(--ease-out-expo) forwards;
   animation-timeline: view();
-  animation-range: entry 0% cover 30%;
+  animation-range: entry 0% cover 25%;
 }
 
+/* Scale reveal - for cards and featured elements */
 .scroll-reveal-scale {
   opacity: 0;
-  animation: reveal-scale 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: reveal-scale 0.7s var(--ease-out-expo) forwards;
   animation-timeline: view();
-  animation-range: entry 0% cover 30%;
+  animation-range: entry 0% cover 25%;
 }
 
+/* Horizontal reveals */
 .scroll-reveal-left {
   opacity: 0;
-  animation: reveal-left 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: reveal-left 0.8s var(--ease-out-expo) forwards;
   animation-timeline: view();
-  animation-range: entry 0% cover 35%;
+  animation-range: entry 0% cover 30%;
 }
 
 .scroll-reveal-right {
   opacity: 0;
-  animation: reveal-right 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: reveal-right 0.8s var(--ease-out-expo) forwards;
   animation-timeline: view();
-  animation-range: entry 0% cover 35%;
+  animation-range: entry 0% cover 30%;
 }
 
+/* Rotate reveal - playful but professional */
 .scroll-reveal-rotate {
   opacity: 0;
-  animation: reveal-rotate 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: reveal-rotate 0.8s var(--ease-out-expo) forwards;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+/* Mask reveal - for text blocks */
+.scroll-reveal-mask {
+  opacity: 0;
+  animation: reveal-mask 1s var(--ease-out-expo) forwards;
   animation-timeline: view();
   animation-range: entry 0% cover 35%;
 }
 
-.scroll-reveal-mask {
+/* NEW: Elegant reveal - bouncy professional */
+.scroll-reveal-elegant {
   opacity: 0;
-  animation: reveal-mask 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: reveal-elegant 1s var(--ease-out-quint) forwards;
+  animation-timeline: view();
+  animation-range: entry 0% cover 35%;
+}
+
+/* NEW: Glow reveal - for premium elements */
+.scroll-reveal-glow {
+  opacity: 0;
+  animation: reveal-glow 0.9s var(--ease-out-expo) forwards;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+/* NEW: 3D flip reveal - for cards */
+.scroll-reveal-flip {
+  opacity: 0;
+  animation: reveal-flip 0.8s var(--ease-out-expo) forwards;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+/* NEW: Line reveal - for decorative lines */
+.scroll-reveal-line {
+  transform: scaleX(0);
+  animation: reveal-line 1s var(--ease-out-expo) forwards;
   animation-timeline: view();
   animation-range: entry 0% cover 40%;
 }
 
-/* Parallax effect */
+/* Parallax effect - smooth depth */
 .scroll-parallax {
   animation: counter-scroll linear forwards;
   animation-timeline: view();
   animation-range: entry 0% exit 100%;
 }
 
-/* Staggered children animations */
-.scroll-reveal-stagger > * {
-  opacity: 0;
-  animation: reveal-up-subtle 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Parallax - slower for backgrounds */
+.scroll-parallax-slow {
+  animation: counter-scroll linear forwards;
   animation-timeline: view();
-  animation-range: entry 0% cover 35%;
+  animation-range: entry -20% exit 120%;
 }
 
-.scroll-reveal-stagger > *:nth-child(1) { animation-delay: 0ms; }
-.scroll-reveal-stagger > *:nth-child(2) { animation-delay: 60ms; }
-.scroll-reveal-stagger > *:nth-child(3) { animation-delay: 120ms; }
-.scroll-reveal-stagger > *:nth-child(4) { animation-delay: 180ms; }
-.scroll-reveal-stagger > *:nth-child(5) { animation-delay: 240ms; }
-.scroll-reveal-stagger > *:nth-child(6) { animation-delay: 300ms; }
+/* ========================================
+   STAGGERED ANIMATIONS
+   ======================================== */
 
-/* Cascade stagger - for cards/grid items */
-.scroll-cascade > * {
+/* Staggered children - subtle, quick */
+.scroll-reveal-stagger > * {
   opacity: 0;
-  animation: reveal-scale 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: reveal-up-subtle 0.5s var(--ease-out-expo) forwards;
   animation-timeline: view();
   animation-range: entry 0% cover 30%;
 }
 
-.scroll-cascade > *:nth-child(1) { animation-delay: 0ms; }
-.scroll-cascade > *:nth-child(2) { animation-delay: 100ms; }
-.scroll-cascade > *:nth-child(3) { animation-delay: 200ms; }
-.scroll-cascade > *:nth-child(4) { animation-delay: 300ms; }
-.scroll-cascade > *:nth-child(5) { animation-delay: 400ms; }
-.scroll-cascade > *:nth-child(6) { animation-delay: 500ms; }
+.scroll-reveal-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.scroll-reveal-stagger > *:nth-child(2) { animation-delay: 50ms; }
+.scroll-reveal-stagger > *:nth-child(3) { animation-delay: 100ms; }
+.scroll-reveal-stagger > *:nth-child(4) { animation-delay: 150ms; }
+.scroll-reveal-stagger > *:nth-child(5) { animation-delay: 200ms; }
+.scroll-reveal-stagger > *:nth-child(6) { animation-delay: 250ms; }
+.scroll-reveal-stagger > *:nth-child(7) { animation-delay: 300ms; }
+.scroll-reveal-stagger > *:nth-child(8) { animation-delay: 350ms; }
 
-/* Text reveal - word by word effect */
-.scroll-text-reveal {
+/* Cascade stagger - for card grids */
+.scroll-cascade > * {
   opacity: 0;
-  animation: reveal-mask 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: reveal-scale 0.6s var(--ease-out-expo) forwards;
   animation-timeline: view();
   animation-range: entry 0% cover 25%;
 }
+
+.scroll-cascade > *:nth-child(1) { animation-delay: 0ms; }
+.scroll-cascade > *:nth-child(2) { animation-delay: 80ms; }
+.scroll-cascade > *:nth-child(3) { animation-delay: 160ms; }
+.scroll-cascade > *:nth-child(4) { animation-delay: 240ms; }
+.scroll-cascade > *:nth-child(5) { animation-delay: 320ms; }
+.scroll-cascade > *:nth-child(6) { animation-delay: 400ms; }
+
+/* NEW: Wave stagger - organic timing */
+.scroll-wave > * {
+  opacity: 0;
+  animation: reveal-elegant 0.7s var(--ease-spring) forwards;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+.scroll-wave > *:nth-child(1) { animation-delay: 0ms; }
+.scroll-wave > *:nth-child(2) { animation-delay: 70ms; }
+.scroll-wave > *:nth-child(3) { animation-delay: 120ms; }
+.scroll-wave > *:nth-child(4) { animation-delay: 190ms; }
+.scroll-wave > *:nth-child(5) { animation-delay: 240ms; }
+.scroll-wave > *:nth-child(6) { animation-delay: 310ms; }
+
+/* Text reveal - word by word */
+.scroll-text-reveal {
+  opacity: 0;
+  animation: reveal-mask 0.8s var(--ease-out-expo) forwards;
+  animation-timeline: view();
+  animation-range: entry 0% cover 20%;
+}
+
+/* NEW: Split text container - for headings */
+.scroll-split-text {
+  overflow: hidden;
+}
+
+.scroll-split-text > span {
+  display: inline-block;
+  opacity: 0;
+  animation: reveal-split 0.6s var(--ease-out-expo) forwards;
+  animation-timeline: view();
+  animation-range: entry 0% cover 25%;
+}
+
+/* ========================================
+   UTILITY ANIMATIONS
+   ======================================== */
 
 .animate-fade-in {
   animation: fade-in 0.6s ease-out forwards;
@@ -658,4 +1096,41 @@ button {
   margin-right: auto;
   padding-left: clamp(1.5rem, 4vw, 2rem);
   padding-right: clamp(1.5rem, 4vw, 2rem);
+}
+
+/* WALLET MODAL - Final override to ensure centering */
+div.wallet-adapter-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+div.wallet-adapter-modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+div.wallet-adapter-modal-wrapper {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1 !important;
+}
+
+div.wallet-adapter-modal-container {
+  position: relative !important;
+  margin: auto !important;
+  left: unset !important;
+  right: unset !important;
+  transform: none !important;
+  max-width: 400px !important;
+  width: calc(100% - 40px) !important;
 }

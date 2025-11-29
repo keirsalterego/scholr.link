@@ -7,14 +7,14 @@ export default function DashboardPage() {
   const { connected, publicKey } = useWallet();
 
   return (
-    <div className="min-h-screen py-12 lg:py-20">
-      <div className="max-w-xl mx-auto px-6">
+    <div className="min-h-screen pt-20 sm:pt-24 pb-12 lg:pb-20">
+      <div className="max-w-xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-100 mb-3">
+        <div className="mb-8 sm:mb-10">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-zinc-100 mb-2 sm:mb-3">
             Create a campaign
           </h1>
-          <p className="text-zinc-500">
+          <p className="text-zinc-500 text-sm sm:text-base">
             Set up your funding campaign and share it on social media to start receiving donations.
           </p>
         </div>
@@ -49,13 +49,13 @@ export default function DashboardPage() {
         )}
 
         {/* Form Card */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 sm:p-6 md:p-8">
           <CreateCampaignForm />
         </div>
 
         {/* Tips */}
-        <div className="mt-8 p-5 bg-zinc-900/50 border border-zinc-800/50 rounded-xl">
-          <h3 className="text-sm font-medium text-zinc-300 mb-4">Tips for success</h3>
+        <div className="mt-6 sm:mt-8 p-4 sm:p-5 bg-zinc-900/50 border border-zinc-800/50 rounded-xl">
+          <h3 className="text-sm font-medium text-zinc-300 mb-3 sm:mb-4">Tips for success</h3>
           <ul className="space-y-3">
             {[
               "Keep your title concise—it's displayed in the Blink preview",
