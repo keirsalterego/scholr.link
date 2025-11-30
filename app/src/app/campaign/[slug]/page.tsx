@@ -46,10 +46,19 @@ export default async function CampaignPage({
   params: Promise<{ slug: string }> 
 }) {
   const { slug } = await params;
-  const campaign = CAMPAIGNS[slug];
+  let campaign = CAMPAIGNS[slug];
 
   if (!campaign) {
-    notFound();
+    // Fallback for newly created campaigns not present in mock data
+    campaign = {
+      title: slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+      description: "This campaign was just created. Details will appear once synced.",
+      goal: 0,
+      raised: 0,
+      creator: "unknown",
+      deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      category: "Other",
+    };
   }
 
   const percentRaised = Math.round((campaign.raised / campaign.goal) * 100);

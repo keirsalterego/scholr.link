@@ -11,9 +11,22 @@ interface FormData {
   category: string;
 }
 
-export function CreateCampaignForm() {
+type CreatedCampaign = {
+  slug: string;
+  title: string;
+  description: string;
+  goal: number;
+  raised: number;
+  donors: number;
+  status: "active" | "completed";
+  daysLeft: number;
+  category: string;
+};
+
+export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampaign) => void }) {
   const { publicKey, connected } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState<{ message: string; link: string } | null>(null);
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
@@ -35,7 +48,7 @@ export function CreateCampaignForm() {
     e.preventDefault();
     
     if (!connected || !publicKey) {
-      alert("Please connect your wallet first!");
+      setShowSuccess({ message: "Please connect your wallet first!", link: "" });
       return;
     }
 
@@ -47,17 +60,29 @@ export function CreateCampaignForm() {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
 
-      console.log("Creating campaign:", {
-        ...formData,
+      await new Promise((resolve) => setTimeout(resolve, 800));
+
+      const newCampaign: CreatedCampaign = {
         slug,
-        authority: publicKey.toBase58(),
+        title: formData.title,
+        description: formData.description,
+        goal: Number(formData.goal),
+        raised: 0,
+        donors: 0,
+        status: "active",
+        daysLeft: Math.max(
+          Math.ceil((new Date(formData.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
+          0
+        ),
+        category: formData.category,
+      };
+
+      onCreated?.(newCampaign);
+
+      setShowSuccess({
+        message: "Campaign created! Share your Blink link:",
+        link: `scholr.link/actions/${slug}`,
       });
-
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      alert(
-        `Campaign created! 🎉\n\nShare this link on Twitter:\nscholr.link/actions/${slug}`
-      );
 
       setFormData({
         title: "",
@@ -68,7 +93,7 @@ export function CreateCampaignForm() {
       });
     } catch (error) {
       console.error("Error creating campaign:", error);
-      alert("Failed to create campaign. Please try again.");
+      setShowSuccess({ message: "Failed to create campaign. Please try again.", link: "" });
     } finally {
       setIsSubmitting(false);
     }
@@ -88,6 +113,27 @@ export function CreateCampaignForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+      {showSuccess && (
+        <div className="p-4 bg-[#14f195]/10 border border-[#14f195]/30 rounded-xl flex items-start gap-3">
+          <svg className="w-5 h-5 text-[#14f195] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+          </svg>
+          <div className="flex-1">
+            <p className="text-[13px] sm:text-[14px] text-white">{showSuccess.message}</p>
+            {showSuccess.link && (
+              <p className="mt-1 text-[12px] sm:text-[13px] text-[#14f195] font-mono break-all">{showSuccess.link}</p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowSuccess(null)}
+            className="text-zinc-400 hover:text-white"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
+      )}
       {/* Title */}
       <div>
         <label htmlFor="title" className={labelClasses}>

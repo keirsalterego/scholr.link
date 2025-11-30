@@ -9,10 +9,11 @@ import {
   Connection,
   PublicKey,
   Transaction,
-  SystemProgram,
-  LAMPORTS_PER_SOL,
   clusterApiUrl,
 } from "@solana/web3.js";
+import * as anchor from "@coral-xyz/anchor";
+import scholrIdl from "../../../../../scholr_program/target/idl/scholr_program.json" assert { type: "json" };
+import { TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync } from "@solana/spl-token";
 
 // Mock campaign data - in production, fetch from on-chain or database
 const MOCK_CAMPAIGNS: Record<string, {
@@ -43,6 +44,15 @@ const MOCK_CAMPAIGNS: Record<string, {
 
 // Devnet connection
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+const programId = new PublicKey((scholrIdl as any).metadata.address);
+
+function getCampaignPda(authority: PublicKey, title: string): PublicKey {
+  const [pda] = PublicKey.findProgramAddressSync(
+    [Buffer.from("campaign"), authority.toBuffer(), Buffer.from(title)],
+    programId
+  );
+  return pda;
+}
 
 // GET: Returns the Blink metadata
 export async function GET(
@@ -146,19 +156,48 @@ export async function POST(
     const body: ActionPostRequest = await request.json();
     const userPubkey = new PublicKey(body.account);
 
-    // For demo purposes, we're using SOL instead of USDC
-    // In production, you'd use SPL Token transfer to campaign escrow
-    const campaignAuthority = new PublicKey(campaign.authority);
-    
-    // Create a simple SOL transfer transaction (placeholder for actual program call)
-    // In production, this would invoke the Anchor program's donate instruction
-    const transaction = new Transaction().add(
-      SystemProgram.transfer({
-        fromPubkey: userPubkey,
-        toPubkey: campaignAuthority,
-        lamports: amount * LAMPORTS_PER_SOL * 0.01, // Demo: 0.01 SOL per "USDC"
-      })
+    // Set up Anchor provider pointing to devnet with a dummy wallet (fee payer is the user)
+    const provider = new anchor.AnchorProvider(
+      connection,
+      {
+        publicKey: userPubkey,
+        signTransaction: async (tx: Transaction) => tx,
+        signAllTransactions: async (txs: Transaction[]) => txs,
+      } as any,
+      { preflightCommitment: "confirmed" }
     );
+    const program = new anchor.Program(scholrIdl as any, programId, provider);
+
+    // Derive campaign PDA from authority placeholder and title
+    const authority = new PublicKey(campaign.authority);
+    const campaignPda = getCampaignPda(authority, campaign.title);
+
+    // Generate a new mint keypair for Token-2022 badge
+    const mint = anchor.web3.Keypair.generate();
+    const tokenAccount = getAssociatedTokenAddressSync(
+      mint.publicKey,
+      userPubkey,
+      false,
+      TOKEN_2022_PROGRAM_ID
+    );
+
+    // Build the donate instruction using Anchor's method builder
+    const ix = await program.methods
+      .donate(new anchor.BN(Math.round(amount * 1_000_000))) // amount in micro units for demo
+      .accounts({
+        campaign: campaignPda,
+        signer: userPubkey,
+        mint: mint.publicKey,
+        tokenAccount,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        token2022Program: TOKEN_2022_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+      })
+      .signers([mint])
+      .instruction();
+
+    const transaction = new Transaction().add(ix);
 
     // Get latest blockhash
     const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();

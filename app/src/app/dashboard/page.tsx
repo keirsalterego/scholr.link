@@ -14,8 +14,8 @@ const USER_STATS = {
   patronTier: "Gold",
 };
 
-// Mock user campaigns
-const MY_CAMPAIGNS = [
+// Mock user campaigns (seed)
+const SEED_CAMPAIGNS = [
   {
     slug: "rust-os",
     title: "Rust OS Kernel Project",
@@ -83,6 +83,7 @@ type TabType = "overview" | "campaigns" | "donations" | "create";
 export default function DashboardPage() {
   const { connected, publicKey } = useWallet();
   const [activeTab, setActiveTab] = useState<TabType>("overview");
+  const [myCampaigns, setMyCampaigns] = useState(SEED_CAMPAIGNS);
 
   const tabs = [
     { id: "overview" as TabType, label: "Overview", icon: "grid" },
@@ -278,7 +279,7 @@ export default function DashboardPage() {
                       </button>
                     </div>
                     <div className="divide-y divide-white/[0.04]">
-                      {MY_CAMPAIGNS.slice(0, 2).map((campaign) => (
+                      {myCampaigns.slice(0, 2).map((campaign) => (
                         <div key={campaign.slug} className="p-4 sm:p-5 hover:bg-white/[0.02] transition-colors">
                           <div className="flex items-start justify-between gap-3 mb-3">
                             <div className="flex-1 min-w-0">
@@ -398,22 +399,22 @@ export default function DashboardPage() {
                 {/* Campaign Stats */}
                 <div className="grid grid-cols-3 gap-3 sm:gap-4">
                   <div className="glass-card p-4 sm:p-5 rounded-xl text-center">
-                    <p className="text-[20px] sm:text-[28px] font-bold text-white">{MY_CAMPAIGNS.length}</p>
+                    <p className="text-[20px] sm:text-[28px] font-bold text-white">{myCampaigns.length}</p>
                     <p className="text-[11px] sm:text-[12px] text-zinc-500 uppercase tracking-wider mt-1">Total</p>
                   </div>
                   <div className="glass-card p-4 sm:p-5 rounded-xl text-center">
-                    <p className="text-[20px] sm:text-[28px] font-bold text-[#14f195]">{MY_CAMPAIGNS.filter(c => c.status === "active").length}</p>
+                    <p className="text-[20px] sm:text-[28px] font-bold text-[#14f195]">{myCampaigns.filter(c => c.status === "active").length}</p>
                     <p className="text-[11px] sm:text-[12px] text-zinc-500 uppercase tracking-wider mt-1">Active</p>
                   </div>
                   <div className="glass-card p-4 sm:p-5 rounded-xl text-center">
-                    <p className="text-[20px] sm:text-[28px] font-bold text-zinc-400">{MY_CAMPAIGNS.filter(c => c.status === "completed").length}</p>
+                    <p className="text-[20px] sm:text-[28px] font-bold text-zinc-400">{myCampaigns.filter(c => c.status === "completed").length}</p>
                     <p className="text-[11px] sm:text-[12px] text-zinc-500 uppercase tracking-wider mt-1">Completed</p>
                   </div>
                 </div>
 
                 {/* Campaign List */}
                 <div className="space-y-4">
-                  {MY_CAMPAIGNS.map((campaign) => (
+                  {myCampaigns.map((campaign) => (
                     <div key={campaign.slug} className="glass-card rounded-xl sm:rounded-2xl p-5 sm:p-6 hover:border-white/10 transition-all">
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
                         <div className="flex-1">
@@ -595,7 +596,10 @@ export default function DashboardPage() {
                     <h2 className="text-[18px] sm:text-[20px] font-semibold text-white mb-2">Create a Campaign</h2>
                     <p className="text-[13px] sm:text-[14px] text-zinc-500">Set up your funding campaign and share it on social media.</p>
                   </div>
-                  <CreateCampaignForm />
+                  <CreateCampaignForm onCreated={(c) => {
+                    setMyCampaigns((prev) => [c, ...prev]);
+                    setActiveTab("campaigns");
+                  }} />
                 </div>
 
                 {/* Tips */}
