@@ -83,11 +83,11 @@ export function CreateCampaignForm() {
     return `scholr.link/api/actions/${slug}`;
   };
 
-  const inputClasses = "w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all";
-  const labelClasses = "block text-sm font-medium text-zinc-300 mb-2";
+  const inputClasses = "w-full px-4 py-3 bg-[#0d0d12] border border-white/[0.06] rounded-xl text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#14f195]/50 focus:border-[#14f195]/50 transition-all text-[14px]";
+  const labelClasses = "block text-[13px] sm:text-[14px] font-medium text-zinc-300 mb-2";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
       {/* Title */}
       <div>
         <label htmlFor="title" className={labelClasses}>
@@ -104,7 +104,7 @@ export function CreateCampaignForm() {
           onChange={handleChange}
           className={inputClasses}
         />
-        <div className="mt-2 flex justify-between text-xs text-zinc-600">
+        <div className="mt-2 flex justify-between text-[11px] sm:text-[12px] text-zinc-600">
           <span>This appears in the Blink preview</span>
           <span>{formData.title.length}/50</span>
         </div>
@@ -126,7 +126,7 @@ export function CreateCampaignForm() {
           onChange={handleChange}
           className={`${inputClasses} resize-none`}
         />
-        <div className="mt-2 flex justify-end text-xs text-zinc-600">
+        <div className="mt-2 flex justify-end text-[11px] sm:text-[12px] text-zinc-600">
           <span>{formData.description.length}/500</span>
         </div>
       </div>
@@ -140,7 +140,7 @@ export function CreateCampaignForm() {
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <span className="text-zinc-500 text-sm">$</span>
+              <span className="text-zinc-500 text-[14px]">$</span>
             </div>
             <input
               type="number"
@@ -155,7 +155,7 @@ export function CreateCampaignForm() {
               className={`${inputClasses} pl-8`}
             />
             <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-              <span className="text-zinc-500 text-sm">USDC</span>
+              <span className="text-zinc-500 text-[13px]">USDC</span>
             </div>
           </div>
         </div>
@@ -201,14 +201,14 @@ export function CreateCampaignForm() {
 
       {/* Preview URL */}
       {formData.title && (
-        <div className="p-4 bg-zinc-900/50 border border-zinc-800 rounded-xl">
+        <div className="p-4 bg-[#14f195]/5 border border-[#14f195]/15 rounded-xl">
           <div className="flex items-center gap-2 mb-2">
-            <svg className="w-4 h-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-[#14f195]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
             </svg>
-            <span className="text-xs font-medium text-zinc-500 uppercase tracking-wide">Your Blink URL</span>
+            <span className="text-[11px] sm:text-[12px] font-medium text-[#14f195] uppercase tracking-wide">Your Blink URL</span>
           </div>
-          <code className="text-sm text-purple-400 font-mono break-all">
+          <code className="text-[13px] sm:text-[14px] text-[#14f195] font-mono break-all">
             {generateBlinkUrl()}
           </code>
         </div>
@@ -218,7 +218,7 @@ export function CreateCampaignForm() {
       <button
         type="submit"
         disabled={!connected || isSubmitting}
-        className="w-full py-3.5 px-6 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:from-zinc-700 disabled:to-zinc-700 disabled:text-zinc-500 disabled:cursor-not-allowed rounded-xl transition-all hover:shadow-lg hover:shadow-purple-500/25 disabled:shadow-none"
+        className="w-full py-3.5 px-6 text-[14px] font-semibold text-[#0a0a0f] bg-gradient-to-r from-[#14f195] to-[#00d4aa] hover:shadow-lg hover:shadow-[#14f195]/25 disabled:from-zinc-700 disabled:to-zinc-700 disabled:text-zinc-500 disabled:cursor-not-allowed rounded-xl transition-all"
       >
         {!connected
           ? "Connect wallet to continue"

@@ -28,12 +28,26 @@ html {
   scroll-behavior: smooth;
   /* Prevent horizontal scroll on mobile */
   overflow-x: hidden;
+  /* Ensure proper text sizing on mobile */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* Mobile touch improvements */
 @media (max-width: 768px) {
   * {
     -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Prevent text selection issues on mobile */
+  h1, h2, h3, h4, h5, h6 {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  /* Ensure proper button sizing on mobile */
+  button, a {
+    min-height: 44px;
   }
   
   /* Reduce motion on mobile for performance */
@@ -57,10 +71,43 @@ html {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+.safe-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-right {
+  padding-right: env(safe-area-inset-right);
+}
+
 /* Touch-friendly target sizes */
 .touch-target {
   min-height: 44px;
   min-width: 44px;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 * {

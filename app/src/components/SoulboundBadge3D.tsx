@@ -5,8 +5,8 @@ import { CometCard } from "@/components/ui/comet-card";
 export function SoulboundBadge3D() {
   return (
     <div className="relative scroll-reveal-right">
-      {/* Decorative rings with premium gold accent */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      {/* Decorative rings with premium gold accent - hidden on mobile */}
+      <div className="absolute inset-0 hidden sm:flex items-center justify-center pointer-events-none">
         <div className="w-[280px] sm:w-[350px] lg:w-[420px] h-[280px] sm:h-[350px] lg:h-[420px] rounded-full border border-[#14f195]/10 opacity-30 animate-spin-slow" />
         <div className="absolute w-[220px] sm:w-[280px] lg:w-[340px] h-[220px] sm:h-[280px] lg:h-[340px] rounded-full border border-amber-400/10 animate-reverse-spin-slow" />
         <div className="absolute w-[160px] sm:w-[210px] lg:w-[260px] h-[160px] sm:h-[210px] lg:h-[260px] rounded-full border border-[#9945ff]/10 animate-spin-slow" style={{ animationDuration: '60s' }} />
@@ -44,7 +44,7 @@ export function SoulboundBadge3D() {
               <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")' }} />
               
               {/* Badge visual - enhanced premium design */}
-              <div className="aspect-square rounded-2xl bg-gradient-to-br from-[#14f195]/10 via-[#0a0c10] to-[#9945ff]/10 border border-white/[0.08] p-4 sm:p-5 md:p-6 mb-5 sm:mb-7 relative overflow-hidden">
+              <div className="aspect-square rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#14f195]/10 via-[#0a0c10] to-[#9945ff]/10 border border-white/[0.08] p-3 sm:p-5 md:p-6 mb-4 sm:mb-7 relative overflow-hidden">
                 {/* Luxury ambient glow */}
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(20,241,149,0.2),transparent_50%)]" />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_80%,rgba(153,69,255,0.15),transparent_50%)]" />
@@ -56,7 +56,7 @@ export function SoulboundBadge3D() {
                 <div className="relative h-full flex flex-col items-center justify-center">
                   {/* Premium 3D emblem */}
                   <div 
-                    className="w-18 h-18 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl relative mb-4 sm:mb-5 group/emblem"
+                    className="w-[72px] h-[72px] sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl relative mb-4 sm:mb-5 group/emblem"
                     style={{ 
                       transform: 'translateZ(50px)',
                       transformStyle: 'preserve-3d'
@@ -83,50 +83,50 @@ export function SoulboundBadge3D() {
                   </div>
                   
                   {/* Premium badge text */}
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-8 h-px bg-gradient-to-r from-transparent via-[#14f195]/50 to-transparent" />
-                    <span className="text-[10px] font-semibold text-[#14f195] uppercase tracking-[0.2em]">Patron Badge</span>
-                    <div className="w-8 h-px bg-gradient-to-r from-transparent via-[#14f195]/50 to-transparent" />
+                  <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">
+                    <div className="w-5 sm:w-8 h-px bg-gradient-to-r from-transparent via-[#14f195]/50 to-transparent" />
+                    <span className="text-[8px] sm:text-[10px] font-semibold text-[#14f195] uppercase tracking-[0.15em] sm:tracking-[0.2em]">Patron Badge</span>
+                    <div className="w-5 sm:w-8 h-px bg-gradient-to-r from-transparent via-[#14f195]/50 to-transparent" />
                   </div>
-                  <span className="text-2xl font-bold text-white tracking-tight">#0142</span>
+                  <span className="text-xl sm:text-2xl font-bold text-white tracking-tight">#0142</span>
                 </div>
               </div>
               
               {/* Badge info with premium styling */}
-              <div className="text-center mb-6 relative">
-                <h4 className="font-semibold text-white text-[17px] mb-1.5 tracking-[-0.01em]">Climate ML Research</h4>
+              <div className="text-center mb-4 sm:mb-6 relative">
+                <h4 className="font-semibold text-white text-[15px] sm:text-[17px] mb-1 sm:mb-1.5 tracking-[-0.01em]">Climate ML Research</h4>
                 <div className="flex items-center justify-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#14f195] animate-pulse" />
-                  <p className="text-[13px] text-zinc-400">Supported by <span className="text-zinc-300">sarahchen.sol</span></p>
+                  <p className="text-[12px] sm:text-[13px] text-zinc-400">Supported by <span className="text-zinc-300">sarahchen.sol</span></p>
                 </div>
               </div>
               
               {/* Premium metadata section */}
-              <div className="relative p-5 rounded-2xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)' }}>
+              <div className="relative p-3 sm:p-5 rounded-xl sm:rounded-2xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)' }}>
                 {/* Glass effect */}
-                <div className="absolute inset-0 border border-white/[0.06] rounded-2xl" />
+                <div className="absolute inset-0 border border-white/[0.06] rounded-xl sm:rounded-2xl" />
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 
                 <div className="flex items-center justify-between relative">
                   <div className="text-center flex-1">
-                    <p className="text-[10px] text-zinc-500 mb-1.5 uppercase tracking-wider">Tier</p>
-                    <p className="text-[14px] font-semibold bg-gradient-to-r from-[#14f195] to-[#00d4aa] bg-clip-text text-transparent">Early Believer</p>
+                    <p className="text-[9px] sm:text-[10px] text-zinc-500 mb-1 sm:mb-1.5 uppercase tracking-wider">Tier</p>
+                    <p className="text-[12px] sm:text-[14px] font-semibold bg-gradient-to-r from-[#14f195] to-[#00d4aa] bg-clip-text text-transparent">Early Believer</p>
                   </div>
-                  <div className="w-px h-12 bg-gradient-to-b from-transparent via-zinc-600/50 to-transparent" />
+                  <div className="w-px h-10 sm:h-12 bg-gradient-to-b from-transparent via-zinc-600/50 to-transparent" />
                   <div className="text-center flex-1">
-                    <p className="text-[10px] text-zinc-500 mb-1.5 uppercase tracking-wider">Amount</p>
-                    <p className="text-[14px] font-semibold text-white">25 <span className="text-zinc-400">USDC</span></p>
+                    <p className="text-[9px] sm:text-[10px] text-zinc-500 mb-1 sm:mb-1.5 uppercase tracking-wider">Amount</p>
+                    <p className="text-[12px] sm:text-[14px] font-semibold text-white">25 <span className="text-zinc-400">USDC</span></p>
                   </div>
-                  <div className="w-px h-12 bg-gradient-to-b from-transparent via-zinc-600/50 to-transparent" />
+                  <div className="w-px h-10 sm:h-12 bg-gradient-to-b from-transparent via-zinc-600/50 to-transparent" />
                   <div className="text-center flex-1">
-                    <p className="text-[10px] text-zinc-500 mb-1.5 uppercase tracking-wider">Date</p>
-                    <p className="text-[14px] font-semibold text-white">Nov 24</p>
+                    <p className="text-[9px] sm:text-[10px] text-zinc-500 mb-1 sm:mb-1.5 uppercase tracking-wider">Date</p>
+                    <p className="text-[12px] sm:text-[14px] font-semibold text-white">Nov 24</p>
                   </div>
                 </div>
               </div>
               
               {/* Verified authenticity seal */}
-              <div className="mt-5 flex items-center justify-center gap-2 text-[11px] text-zinc-500">
+              <div className="mt-3 sm:mt-5 flex items-center justify-center gap-2 text-[10px] sm:text-[11px] text-zinc-500">
                 <svg className="w-3.5 h-3.5 text-[#14f195]" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
@@ -147,8 +147,8 @@ export function SoulboundBadge3D() {
           <span className="text-[11px] font-bold text-[#0a0a0f] tracking-wide">✦ SOULBOUND</span>
         </div>
         
-        {/* Enhanced reflection effect */}
-        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-full h-24">
+        {/* Enhanced reflection effect - hidden on mobile */}
+        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-full h-24 hidden sm:block">
           <div className="w-4/5 mx-auto h-full bg-gradient-to-b from-[#14f195]/15 via-[#9945ff]/10 to-transparent blur-3xl opacity-50 animate-pulse-subtle" />
         </div>
       </div>
