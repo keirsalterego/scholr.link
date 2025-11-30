@@ -153,7 +153,7 @@ export function Navbar() {
               Create
             </NavbarButton>
           </Link>
-          {mounted && <WalletButton />}
+          {mounted && <WalletMultiButton />}
         </div>
       </NavBody>
 
@@ -217,7 +217,7 @@ export function Navbar() {
               </svg>
               Wallet
             </div>
-            {mounted && <WalletButton />}
+            {mounted && <WalletMultiButton />}
           </div>
           
           {/* Create Campaign CTA */}
