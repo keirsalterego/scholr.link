@@ -1,5 +1,11 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
+import {
+  TOKEN_2022_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddressSync,
+  getAccount,
+} from "@solana/spl-token";
 import { ScholrProgram } from "../target/types/scholr_program";
 import { expect } from "chai";
 
@@ -26,7 +32,7 @@ describe("scholr_program", () => {
         campaign: campaignPda,
         signer: signer.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
-      })
+      } as any)
       .rpc();
     console.log("Campaign created, tx:", tx);
 
@@ -54,7 +60,7 @@ describe("scholr_program", () => {
         campaign: campaignPda,
         signer: signer.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
-      })
+      } as any)
       .rpc();
 
 
@@ -65,16 +71,15 @@ describe("scholr_program", () => {
     );
     await provider.connection.confirmTransaction(airdropSig);
 
-    // Create mint keypair; on-chain program will create the account
     const mint = anchor.web3.Keypair.generate();
     const amount = new anchor.BN(100);
 
-    // Derive the associated token account for the donor (signer) and mint
-    const associatedTokenAddress = await anchor.utils.token.associatedAddress({
-      mint: mint.publicKey,
-      owner: signer.publicKey,
-      tokenProgram: anchor.utils.token.TOKEN_2022_PROGRAM_ID,
-    });
+    const associatedTokenAddress = getAssociatedTokenAddressSync(
+      mint.publicKey,
+      signer.publicKey,
+      false,
+      TOKEN_2022_PROGRAM_ID
+    );
 
     // Call donate instruction
     await program.methods
@@ -85,10 +90,10 @@ describe("scholr_program", () => {
         mint: mint.publicKey,
         tokenAccount: associatedTokenAddress,
         systemProgram: anchor.web3.SystemProgram.programId,
-        token2022Program: anchor.utils.token.TOKEN_2022_PROGRAM_ID,
-        associatedTokenProgram: anchor.utils.token.ASSOCIATED_PROGRAM_ID,
+        token2022Program: TOKEN_2022_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-      })
+      } as any)
       .signers([mint])
       .rpc();
 
@@ -96,7 +101,13 @@ describe("scholr_program", () => {
     const campaign = await program.account.campaign.fetch(campaignPda);
     expect(campaign.raised.toNumber()).to.equal(amount.toNumber());
 
-    // TODO: Fetch and check the badge (Token-2022 NFT) in the donor's account
-    // This requires proper setup of Token-2022 mint and ATA in the test
+    // Verify minted balance
+    const donorAccount = await getAccount(
+      provider.connection,
+      associatedTokenAddress,
+      "confirmed",
+      TOKEN_2022_PROGRAM_ID
+    );
+    expect(Number(donorAccount.amount)).to.equal(1);
   });
 });

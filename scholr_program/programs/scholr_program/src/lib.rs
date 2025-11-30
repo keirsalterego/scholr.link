@@ -1,16 +1,14 @@
 use anchor_lang::prelude::*;
-use anchor_lang::system_program;
+use anchor_lang::system_program::{self, create_account, CreateAccount};
 use anchor_spl::{
     associated_token::AssociatedToken,
     token_2022::{self, MintTo, Token2022},
+    token_interface::{
+        non_transferable_mint_initialize, NonTransferableMintInitialize,
+    },
 };
-
-// Use Anchor's internal re-exports to avoid version conflicts
-use anchor_spl::token_2022::spl_token_2022::{
-    extension::ExtensionType,
-    state::Mint as MintState,
-};
-// use anchor_lang::solana_program;
+use spl_token_2022::extension::ExtensionType;
+use spl_token_2022::state::Mint as SplMint;
 
 declare_id!("BpxvjF75QaVnnhNF4QQJNQ2CfRvyNo873LjjkEQbu8kp"); // Updated to match deployed program
 
@@ -49,41 +47,72 @@ pub mod scholr_program {
         let campaign = &mut ctx.accounts.campaign;
         campaign.raised += amount;
 
-        // 2. Initialize the Token-2022 Mint (temporary: no extensions for test simplicity)
-        let space: usize = 82; // standard mint size
+        // 2. Initialize the Token-2022 Mint with NonTransferable extension
+        let mint_size = ExtensionType::try_calculate_account_len::<SplMint>(&[
+            ExtensionType::NonTransferable,
+        ])?;
+        let lamports = (Rent::get()?).minimum_balance(mint_size);
 
-        let lamports_required = (Rent::get()?).minimum_balance(space);
-
-        anchor_lang::system_program::create_account(
+        create_account(
             CpiContext::new(
                 ctx.accounts.system_program.to_account_info(),
-                anchor_lang::system_program::CreateAccount {
+                CreateAccount {
                     from: ctx.accounts.signer.to_account_info(),
                     to: ctx.accounts.mint.to_account_info(),
                 },
             ),
-            lamports_required,
-            space as u64,
+            lamports,
+            mint_size as u64,
             &ctx.accounts.token_2022_program.key(),
         )?;
 
-        // Initialize the actual Mint with NonTransferable extension
-        token_2022::initialize_mint(
+        non_transferable_mint_initialize(CpiContext::new(
+            ctx.accounts.token_2022_program.to_account_info(),
+            NonTransferableMintInitialize {
+                mint: ctx.accounts.mint.to_account_info(),
+                token_program_id: ctx.accounts.token_2022_program.to_account_info(),
+            },
+        ))?;
+
+        token_2022::initialize_mint2(
             CpiContext::new(
                 ctx.accounts.token_2022_program.to_account_info(),
-                token_2022::InitializeMint {
+                token_2022::InitializeMint2 {
                     mint: ctx.accounts.mint.to_account_info(),
-                    rent: ctx.accounts.rent.to_account_info(),
                 },
             ),
-            0, // Decimals (0 for NFT/Badge)
+            0,
             &ctx.accounts.signer.key(),
-            Some(&ctx.accounts.signer.key()),
+            None,
         )?;
 
-        // 3. (Temporarily disabled) Create ATA and mint badge will be added back after tests
+        // 3. Create ATA (idempotent) for donor under Token-2022
+        anchor_spl::associated_token::create_idempotent(
+            CpiContext::new(
+                ctx.accounts.associated_token_program.to_account_info(),
+                anchor_spl::associated_token::Create {
+                    payer: ctx.accounts.signer.to_account_info(),
+                    associated_token: ctx.accounts.token_account.to_account_info(),
+                    authority: ctx.accounts.signer.to_account_info(),
+                    mint: ctx.accounts.mint.to_account_info(),
+                    system_program: ctx.accounts.system_program.to_account_info(),
+                    token_program: ctx.accounts.token_2022_program.to_account_info(),
+                },
+            ),
+        )?;
 
-        // 4. (Temporarily disabled) Mint exactly 1 token to the donor
+        // 4. Mint exactly 1 token to the donor
+        token_2022::mint_to(
+            CpiContext::new(
+                ctx.accounts.token_2022_program.to_account_info(),
+                MintTo {
+                    mint: ctx.accounts.mint.to_account_info(),
+                    to: ctx.accounts.token_account.to_account_info(),
+                    authority: ctx.accounts.signer.to_account_info(),
+                },
+            ),
+            1,
+        )?;
 
         Ok(())
     }
