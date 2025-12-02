@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { WalletContextProvider } from "@/contexts/WalletContextProvider";
+import { AuthProvider } from "@/components/AuthProvider";
 import { Navbar } from "@/components/Navbar";
 
 const dmSans = DM_Sans({
@@ -38,10 +39,12 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} ${ibmPlexMono.variable} font-sans antialiased bg-[#050506]`}
       >
-        <WalletContextProvider>
-          <Navbar />
-          <main>{children}</main>
-        </WalletContextProvider>
+        <AuthProvider>
+          <WalletContextProvider>
+            <Navbar />
+            <main>{children}</main>
+          </WalletContextProvider>
+        </AuthProvider>
       </body>
     </html>
   );
