@@ -8,6 +8,7 @@ import {
   PublicKey,
   SystemProgram,
   Transaction,
+  VersionedTransaction, // <--- ADDED THIS IMPORT
   Keypair,
   clusterApiUrl,
 } from "@solana/web3.js";
@@ -50,8 +51,14 @@ export async function POST(req: NextRequest) {
     const wallet = {
       payer: dummy,
       publicKey: dummy.publicKey,
-      signTransaction: async (tx: Transaction) => tx,
-      signAllTransactions: async (txs: Transaction[]) => txs,
+      // FIXED: Updated signature to handle both Transaction and VersionedTransaction
+      signTransaction: async <T extends Transaction | VersionedTransaction>(tx: T): Promise<T> => {
+        return tx;
+      },
+      // FIXED: Updated signature for signAllTransactions as well
+      signAllTransactions: async <T extends Transaction | VersionedTransaction>(txs: T[]): Promise<T[]> => {
+        return txs;
+      },
     };
 
     const provider = new anchor.AnchorProvider(connection, wallet, {
@@ -60,7 +67,6 @@ export async function POST(req: NextRequest) {
 
     const program = new anchor.Program(
       scholrIdl as anchor.Idl,
-      programId,
       provider
     );
 
@@ -113,3 +119,4 @@ export async function POST(req: NextRequest) {
 export async function OPTIONS() {
   return new Response(null);
 }
+
