@@ -12,7 +12,7 @@ import {
   clusterApiUrl,
 } from "@solana/web3.js";
 import * as anchor from "@coral-xyz/anchor";
-import scholrIdl from "../../../../../scholr_program/target/idl/scholr_program.json" assert { type: "json" };
+import scholrIdl from "../../../../idl/scholr_program.json" assert { type: "json" };
 import { TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync } from "@solana/spl-token";
 
 // Mock campaign data - in production, fetch from on-chain or database
@@ -44,7 +44,7 @@ const MOCK_CAMPAIGNS: Record<string, {
 
 // Devnet connection
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-const programId = new PublicKey((scholrIdl as any).metadata.address);
+const programId = new PublicKey((scholrIdl as any).address);
 
 function getCampaignPda(authority: PublicKey, title: string): PublicKey {
   const [pda] = PublicKey.findProgramAddressSync(
@@ -166,7 +166,11 @@ export async function POST(
       } as any,
       { preflightCommitment: "confirmed" }
     );
-    const program = new anchor.Program(scholrIdl as any, programId, provider);
+    const program = new anchor.Program(
+      scholrIdl as anchor.Idl,
+      programId as any,
+      provider as any
+    );
 
     // Derive campaign PDA from authority placeholder and title
     const authority = new PublicKey(campaign.authority);

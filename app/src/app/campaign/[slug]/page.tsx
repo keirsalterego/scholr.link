@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import * as anchor from "@coral-xyz/anchor";
+import scholrIdl from "../../../idl/scholr_program.json" assert { type: "json" };
+import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
 
 // Mock campaigns data
 const CAMPAIGNS: Record<string, {
@@ -60,6 +63,33 @@ export default async function CampaignPage({
       category: "Other",
     };
   }
+
+  // Try on-chain fetch by deriving PDA from a heuristic: use a creator from CAMPAIGNS or skip
+  try {
+    const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+    const programId = new PublicKey((scholrIdl as any).address);
+    // Attempt with a dummy authority for slugs not in mock; in real flow, pass authority in URL or look up by index
+    const authority = new PublicKey(campaign.creator.length === 44 ? campaign.creator : "11111111111111111111111111111111");
+    const [pda] = PublicKey.findProgramAddressSync(
+      [Buffer.from("campaign"), authority.toBuffer(), Buffer.from(slug)],
+      programId
+    );
+    const idl = scholrIdl as any;
+    const coder = new anchor.BorshAccountsCoder(idl);
+    const accountInfo = await connection.getAccountInfo(pda);
+    if (accountInfo) {
+      const decoded = coder.decode("Campaign", accountInfo.data);
+      campaign = {
+        title: decoded.title,
+        description: decoded.metadataUri,
+        goal: Number(decoded.goal),
+        raised: Number(decoded.raised),
+        creator: decoded.authority.toBase58(),
+        deadline: campaign.deadline,
+        category: campaign.category,
+      };
+    }
+  } catch {}
 
   const percentRaised = Math.round((campaign.raised / campaign.goal) * 100);
   const blinkUrl = `https://scholr.link/api/actions/${slug}`;

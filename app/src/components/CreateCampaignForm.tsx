@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import * as anchor from "@coral-xyz/anchor";
+import { SystemProgram, Transaction } from "@solana/web3.js";
+import scholrIdl from "../idl/scholr_program.json" assert { type: "json" };
 
 interface FormData {
   title: string;
@@ -24,7 +27,8 @@ type CreatedCampaign = {
 };
 
 export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampaign) => void }) {
-  const { publicKey, connected } = useWallet();
+  const { publicKey, connected, sendTransaction } = useWallet();
+  const { connection } = useConnection();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState<{ message: string; link: string } | null>(null);
   const [formData, setFormData] = useState<FormData>({
@@ -60,7 +64,21 @@ export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampa
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
 
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      // Request server to build initialize_campaign transaction
+      const resp = await fetch("/api/create-campaign", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: formData.title,
+          goal: Number(formData.goal),
+          metadataUri: "https://example.com/irys-meta.json",
+          signer: publicKey.toBase58(),
+        }),
+      });
+      if (!resp.ok) throw new Error("Failed to build transaction");
+      const { transaction } = await resp.json();
+      const tx = Transaction.from(Buffer.from(transaction, "base64"));
+      await sendTransaction(tx, connection, { skipPreflight: false });
 
       const newCampaign: CreatedCampaign = {
         slug,

@@ -1,0 +1,53 @@
+{
+  "address": "BpxvjF75QaVnnhNF4QQJNQ2CfRvyNo873LjjkEQbu8kp",
+  "metadata": {
+    "name": "scholr_program",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "donate",
+      "discriminator": [121,186,218,211,73,70,196,180],
+      "accounts": [
+        {"name": "campaign", "writable": true},
+        {"name": "signer", "writable": true, "signer": true},
+        {"name": "mint", "writable": true, "signer": true},
+        {"name": "token_account", "writable": true},
+        {"name": "system_program", "address": "11111111111111111111111111111111"},
+        {"name": "token_2022_program", "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"},
+        {"name": "associated_token_program", "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"},
+        {"name": "rent", "address": "SysvarRent111111111111111111111111111111111"}
+      ],
+      "args": [{"name": "amount", "type": "u64"}]
+    },
+    {
+      "name": "initialize_campaign",
+      "discriminator": [169,88,7,6,9,165,65,132],
+      "accounts": [
+        {"name": "campaign", "writable": true, "pda": {"seeds": [
+          {"kind": "const", "value": [99,97,109,112,97,105,103,110]},
+          {"kind": "account", "path": "signer"},
+          {"kind": "arg", "path": "title"}
+        ]}},
+        {"name": "signer", "writable": true, "signer": true},
+        {"name": "system_program", "address": "11111111111111111111111111111111"}
+      ],
+      "args": [
+        {"name": "title", "type": "string"},
+        {"name": "goal", "type": "u64"},
+        {"name": "metadata_uri", "type": "string"}
+      ]
+    }
+  ],
+  "accounts": [{"name": "Campaign", "discriminator": [50,40,49,11,157,220,229,192]}],
+  "types": [{"name": "Campaign", "type": {"kind": "struct", "fields": [
+    {"name": "authority", "type": "pubkey"},
+    {"name": "title", "type": "string"},
+    {"name": "goal", "type": "u64"},
+    {"name": "raised", "type": "u64"},
+    {"name": "metadata_uri", "type": "string"},
+    {"name": "bump", "type": "u8"}
+  ]}}]
+}
