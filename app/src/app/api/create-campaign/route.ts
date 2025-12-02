@@ -8,7 +8,7 @@ import {
   PublicKey,
   SystemProgram,
   Transaction,
-  VersionedTransaction, // <--- ADDED THIS IMPORT
+  VersionedTransaction, 
   Keypair,
   clusterApiUrl,
 } from "@solana/web3.js";
@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Ensure this matches your wallet network!
     const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
     const programId = new PublicKey((scholrIdl as any).address);
@@ -43,19 +44,14 @@ export async function POST(req: NextRequest) {
       programId
     );
 
-    // --------------------------------------
-    // FIX: Build a minimal Anchor wallet
-    // --------------------------------------
+    // Dummy wallet that satisfies the Anchor Interface
     const dummy = Keypair.generate();
-
     const wallet = {
       payer: dummy,
       publicKey: dummy.publicKey,
-      // FIXED: Updated signature to handle both Transaction and VersionedTransaction
       signTransaction: async <T extends Transaction | VersionedTransaction>(tx: T): Promise<T> => {
         return tx;
       },
-      // FIXED: Updated signature for signAllTransactions as well
       signAllTransactions: async <T extends Transaction | VersionedTransaction>(txs: T[]): Promise<T[]> => {
         return txs;
       },
@@ -65,6 +61,7 @@ export async function POST(req: NextRequest) {
       preflightCommitment: "confirmed",
     });
 
+    // CORRECTED: Constructor signature (IDL, Provider)
     const program = new anchor.Program(
       scholrIdl as anchor.Idl,
       provider
@@ -119,4 +116,3 @@ export async function POST(req: NextRequest) {
 export async function OPTIONS() {
   return new Response(null);
 }
-
