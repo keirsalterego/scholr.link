@@ -7,8 +7,8 @@ import { CreateCampaignForm } from "@/components/CreateCampaignForm";
 
 // Mock user stats
 const USER_STATS = {
-  totalRaised: 2450,
-  totalDonated: 890,
+  totalRaised: 125,
+  totalDonated: 45,
   activeCampaigns: 2,
   badgesEarned: 7,
   patronTier: "Gold",
@@ -20,8 +20,8 @@ const SEED_CAMPAIGNS = [
     slug: "rust-os",
     title: "Rust OS Kernel Project",
     description: "Building a minimal OS kernel in Rust for my final year project.",
-    goal: 200,
-    raised: 150,
+    goal: 10,
+    raised: 7.5,
     donors: 12,
     status: "active",
     daysLeft: 14,
@@ -32,8 +32,8 @@ const SEED_CAMPAIGNS = [
     slug: "quantum-sim",
     title: "Quantum Computing Simulator",
     description: "Educational quantum circuit simulator for students.",
-    goal: 450,
-    raised: 450,
+    goal: 22.5,
+    raised: 22.5,
     donors: 28,
     status: "completed",
     daysLeft: 0,
@@ -47,7 +47,7 @@ const MY_DONATIONS = [
   {
     id: 1,
     project: "Climate ML Research",
-    amount: 250,
+    amount: 12.5,
     badge: "Gold",
     date: "2024-01-18",
     creator: "sarahchen.sol",
@@ -55,7 +55,7 @@ const MY_DONATIONS = [
   {
     id: 2,
     project: "Biodegradable Packaging Lab",
-    amount: 100,
+    amount: 5,
     badge: "Silver",
     date: "2024-01-10",
     creator: "greenlab.sol",
@@ -63,7 +63,7 @@ const MY_DONATIONS = [
   {
     id: 3,
     project: "AI Study Assistant",
-    amount: 50,
+    amount: 2.5,
     badge: "Bronze",
     date: "2024-01-05",
     creator: "alexdev.sol",
@@ -72,10 +72,10 @@ const MY_DONATIONS = [
 
 // Mock activity feed
 const ACTIVITY_FEED = [
-  { type: "donation", message: "vitalik.sol donated $50 to your Rust OS project", time: "2 hours ago" },
+  { type: "donation", message: "vitalik.sol donated 2.5 SOL to your Rust OS project", time: "2 hours ago" },
   { type: "milestone", message: "Your campaign reached 75% of its goal!", time: "5 hours ago" },
   { type: "badge", message: "You earned a Gold Patron badge", time: "1 day ago" },
-  { type: "donation", message: "satoshi.sol donated $100 to your Rust OS project", time: "2 days ago" },
+  { type: "donation", message: "satoshi.sol donated 5 SOL to your Rust OS project", time: "2 days ago" },
 ];
 
 type TabType = "overview" | "campaigns" | "donations" | "create";
@@ -231,8 +231,8 @@ export default function DashboardPage() {
                 {/* Stats Grid */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                   {[
-                    { label: "Total Raised", value: `$${USER_STATS.totalRaised.toLocaleString()}`, icon: "trending-up", color: "from-[#14f195] to-[#00d4aa]" },
-                    { label: "Total Donated", value: `$${USER_STATS.totalDonated.toLocaleString()}`, icon: "heart", color: "from-[#9945ff] to-[#7c3aed]" },
+                    { label: "Total Raised", value: `${USER_STATS.totalRaised} SOL`, icon: "trending-up", color: "from-[#14f195] to-[#00d4aa]" },
+                    { label: "Total Donated", value: `${USER_STATS.totalDonated} SOL`, icon: "heart", color: "from-[#9945ff] to-[#7c3aed]" },
                     { label: "Active Campaigns", value: USER_STATS.activeCampaigns.toString(), icon: "folder", color: "from-sky-500 to-blue-500" },
                     { label: "Badges Earned", value: USER_STATS.badgesEarned.toString(), icon: "badge", color: "from-amber-500 to-orange-500" },
                   ].map((stat, i) => (
@@ -302,8 +302,8 @@ export default function DashboardPage() {
                             />
                           </div>
                           <div className="flex items-center justify-between mt-2">
-                            <span className="text-[12px] text-zinc-500">${campaign.raised} raised</span>
-                            <span className="text-[12px] text-zinc-600">${campaign.goal} goal</span>
+                            <span className="text-[12px] text-zinc-500">{campaign.raised} SOL raised</span>
+                            <span className="text-[12px] text-zinc-600">{campaign.goal} SOL goal</span>
                           </div>
                         </div>
                       ))}
@@ -454,7 +454,7 @@ export default function DashboardPage() {
                           />
                         </div>
                         <div className="flex items-center justify-between mt-2">
-                          <span className="text-[13px] font-medium text-white">${campaign.raised} <span className="text-zinc-500">of ${campaign.goal}</span></span>
+                          <span className="text-[13px] font-medium text-white">{campaign.raised} SOL <span className="text-zinc-500">of {campaign.goal} SOL</span></span>
                           <span className="text-[13px] text-zinc-500">{Math.round((campaign.raised / campaign.goal) * 100)}%</span>
                         </div>
                       </div>
@@ -521,7 +521,7 @@ export default function DashboardPage() {
                       <p className="text-[10px] sm:text-[11px] text-zinc-500 uppercase tracking-wider mt-1">Total Badges</p>
                     </div>
                     <div className="text-center p-3 bg-zinc-800/50 rounded-xl">
-                      <p className="text-[20px] sm:text-[28px] font-bold text-[#14f195]">${USER_STATS.totalDonated}</p>
+                      <p className="text-[20px] sm:text-[28px] font-bold text-[#14f195]">{USER_STATS.totalDonated} SOL</p>
                       <p className="text-[10px] sm:text-[11px] text-zinc-500 uppercase tracking-wider mt-1">Total Donated</p>
                     </div>
                     <div className="text-center p-3 bg-zinc-800/50 rounded-xl">
@@ -529,7 +529,7 @@ export default function DashboardPage() {
                       <p className="text-[10px] sm:text-[11px] text-zinc-500 uppercase tracking-wider mt-1">Projects</p>
                     </div>
                     <div className="text-center p-3 bg-zinc-800/50 rounded-xl">
-                      <p className="text-[20px] sm:text-[28px] font-bold text-[#9945ff]">$110</p>
+                      <p className="text-[20px] sm:text-[28px] font-bold text-[#9945ff]">5.5 SOL</p>
                       <p className="text-[10px] sm:text-[11px] text-zinc-500 uppercase tracking-wider mt-1">To Platinum</p>
                     </div>
                   </div>
@@ -560,7 +560,7 @@ export default function DashboardPage() {
                           
                           {/* Amount & Date */}
                           <div className="text-right flex-shrink-0">
-                            <p className="text-[16px] sm:text-[18px] font-bold text-[#14f195]">${donation.amount}</p>
+                            <p className="text-[16px] sm:text-[18px] font-bold text-[#14f195]">{donation.amount} SOL</p>
                             <p className="text-[11px] sm:text-[12px] text-zinc-600">{donation.date}</p>
                           </div>
                         </div>

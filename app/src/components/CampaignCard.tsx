@@ -99,10 +99,10 @@ export function CampaignCard({
             </div>
             <div className="flex justify-between mt-2 sm:mt-2.5">
               <div className="flex items-baseline gap-1">
-                <span className="text-[14px] sm:text-[15px] font-semibold text-white tracking-tight">${raised}</span>
+                <span className="text-[14px] sm:text-[15px] font-semibold text-white tracking-tight">{raised} SOL</span>
                 <span className="text-[11px] sm:text-[12px] text-zinc-500">raised</span>
               </div>
-              <span className="text-[11px] sm:text-[12px] text-zinc-500">of ${goal}</span>
+              <span className="text-[11px] sm:text-[12px] text-zinc-500">of {goal} SOL</span>
             </div>
           </div>
 

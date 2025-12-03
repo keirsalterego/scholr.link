@@ -16,7 +16,7 @@ export function BlinkPreview() {
     setMousePosition({ x, y });
   };
 
-  const amounts = [5, 10, 25, 50];
+  const amounts = [0.1, 0.25, 0.5, 1];
 
   return (
     <>
@@ -60,7 +60,7 @@ export function BlinkPreview() {
                   ))}
                 </div>
                 <button className="glass-button-primary w-full py-3 text-white font-semibold rounded-xl">
-                  Donate {selectedAmount || '...'} USDC
+                  Donate {selectedAmount || '...'} SOL
                 </button>
               </div>
             </div>
@@ -182,10 +182,10 @@ export function BlinkPreview() {
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <div className="flex items-baseline gap-1.5">
-                      <span className="text-xl font-semibold text-white tracking-tight">125</span>
-                      <span className="text-sm text-[#71767b]">USDC</span>
+                      <span className="text-xl font-semibold text-white tracking-tight">6.25</span>
+                      <span className="text-sm text-[#71767b]">SOL</span>
                     </div>
-                    <p className="text-xs text-[#71767b]">of 500 USDC goal</p>
+                    <p className="text-xs text-[#71767b]">of 25 SOL goal</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-medium text-white">12</p>
@@ -212,7 +212,7 @@ export function BlinkPreview() {
                 
                 {/* Donate button */}
                 <button className="glass-button-primary w-full py-3.5 text-white font-semibold rounded-xl transition-all duration-300">
-                  <span>Donate {selectedAmount || '...'} USDC</span>
+                  <span>Donate {selectedAmount || '...'} SOL</span>
                 </button>
                 
                 {/* Footer */}
@@ -281,10 +281,10 @@ export function BlinkPreview() {
         <div className="glass-card rounded-xl p-3.5 shadow-xl">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#14f195] to-[#9945ff] flex items-center justify-center">
-              <span className="text-xs font-semibold text-[#0a0a0f]">+5</span>
+              <span className="text-xs font-semibold text-[#0a0a0f]">+</span>
             </div>
             <div>
-              <p className="text-sm font-medium text-white tracking-[-0.01em]">+5 USDC</p>
+              <p className="text-sm font-medium text-white tracking-[-0.01em]">+0.25 SOL</p>
               <p className="text-[11px] text-zinc-500">Confirmed · Just now</p>
             </div>
           </div>

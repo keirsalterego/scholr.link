@@ -115,7 +115,7 @@ export function SoulboundBadge3D() {
                   <div className="w-px h-10 sm:h-12 bg-gradient-to-b from-transparent via-zinc-600/50 to-transparent" />
                   <div className="text-center flex-1">
                     <p className="text-[9px] sm:text-[10px] text-zinc-500 mb-1 sm:mb-1.5 uppercase tracking-wider">Amount</p>
-                    <p className="text-[12px] sm:text-[14px] font-semibold text-white">25 <span className="text-zinc-400">USDC</span></p>
+                    <p className="text-[12px] sm:text-[14px] font-semibold text-white">1.25 <span className="text-zinc-400">SOL</span></p>
                   </div>
                   <div className="w-px h-10 sm:h-12 bg-gradient-to-b from-transparent via-zinc-600/50 to-transparent" />
                   <div className="text-center flex-1">

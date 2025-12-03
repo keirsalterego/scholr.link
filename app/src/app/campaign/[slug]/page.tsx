@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import * as anchor from "@coral-xyz/anchor";
 import scholrIdl from "../../../idl/scholr_program.json" assert { type: "json" };
 import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
@@ -17,8 +16,8 @@ const CAMPAIGNS: Record<string, {
   "rust-os": {
     title: "Rust OS Kernel Project",
     description: "Building a minimal OS kernel in Rust for my final year project. This project aims to create a lightweight, memory-safe operating system kernel that can run on Raspberry Pi devices.\n\nThe funds will be used to purchase a cluster of 4 Raspberry Pi 5 units for testing concurrent process handling and memory management implementations.\n\nKey milestones:\n• Basic bootloader implementation\n• Memory management system\n• Process scheduler\n• Basic filesystem support",
-    goal: 200,
-    raised: 50,
+    goal: 10,
+    raised: 2.5,
     creator: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
     deadline: "2024-03-15",
     category: "Engineering",
@@ -26,8 +25,8 @@ const CAMPAIGNS: Record<string, {
   "ml-research": {
     title: "ML Research: Climate Prediction",
     description: "Training neural networks to predict local weather patterns using historical data from the past 50 years. This research could help local farmers and communities prepare for extreme weather events.\n\nThe funds will be used for GPU cloud computing credits on AWS/GCP to train large-scale transformer models on climate data.\n\nExpected outcomes:\n• Trained model with 85%+ accuracy on 7-day forecasts\n• Published research paper\n• Open-source codebase",
-    goal: 500,
-    raised: 125,
+    goal: 25,
+    raised: 6.25,
     creator: "8yLLtg3DX98e08UKSEqcE6kCljfmU8nfQc84qTJosgBtV",
     deadline: "2024-04-01",
     category: "Research",
@@ -35,8 +34,8 @@ const CAMPAIGNS: Record<string, {
   "robotics-arm": {
     title: "3D Printed Robotic Arm",
     description: "Building a low-cost prosthetic arm prototype using 3D printing and Arduino for accessibility research. The goal is to create an affordable alternative to expensive prosthetics.\n\nFunds will cover:\n• 3D printing materials (PLA, TPU)\n• Arduino components and servos\n• Sensors and haptic feedback modules\n• Testing and iteration costs",
-    goal: 350,
-    raised: 280,
+    goal: 17.5,
+    raised: 14,
     creator: "9zMMug4EY09f19VLTFrdF7lDkmgnV9ogRd95rUKptgCuW",
     deadline: "2024-02-28",
     category: "Hardware",
@@ -137,8 +136,8 @@ export default async function CampaignPage({
             <div className="lg:hidden p-5 bg-zinc-900 border border-zinc-800 rounded-2xl">
               <div className="mb-4">
                 <div className="flex items-baseline justify-between mb-2">
-                  <span className="text-2xl font-bold text-zinc-100">${campaign.raised}</span>
-                  <span className="text-sm text-zinc-500">of ${campaign.goal}</span>
+                  <span className="text-2xl font-bold text-zinc-100">{campaign.raised} SOL</span>
+                  <span className="text-sm text-zinc-500">of {campaign.goal} SOL</span>
                 </div>
                 <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
                   <div
@@ -181,10 +180,10 @@ export default async function CampaignPage({
               <div className="hidden lg:block p-6 bg-zinc-900 border border-zinc-800 rounded-2xl">
                 <div className="mb-5">
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-3xl font-bold text-zinc-100">${campaign.raised}</span>
+                    <span className="text-3xl font-bold text-zinc-100">{campaign.raised} SOL</span>
                     <span className="text-sm text-zinc-500">raised</span>
                   </div>
-                  <p className="text-sm text-zinc-500 mb-4">{percentRaised}% of ${campaign.goal} goal</p>
+                  <p className="text-sm text-zinc-500 mb-4">{percentRaised}% of {campaign.goal} SOL goal</p>
                   <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
@@ -206,10 +205,10 @@ export default async function CampaignPage({
 
                 <div className="space-y-2">
                   <button className="w-full py-3 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl transition-all hover:shadow-lg hover:shadow-purple-500/25">
-                    Donate 5 USDC
+                    Donate 0.25 SOL
                   </button>
                   <button className="w-full py-3 text-sm font-medium text-zinc-300 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl transition-colors">
-                    Donate 20 USDC
+                    Donate 1 SOL
                   </button>
                   <button className="w-full py-3 text-sm font-medium text-zinc-300 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl transition-colors">
                     Custom amount

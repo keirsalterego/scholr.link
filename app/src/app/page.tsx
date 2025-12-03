@@ -9,8 +9,8 @@ const FEATURED_CAMPAIGNS = [
     slug: "rust-os",
     title: "Rust OS Kernel Project",
     description: "Building a minimal OS kernel in Rust for my final year project. Need funds for a Raspberry Pi cluster!",
-    goal: 200,
-    raised: 50,
+    goal: 10,
+    raised: 2.5,
     creator: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
     category: "Engineering",
   },
@@ -18,8 +18,8 @@ const FEATURED_CAMPAIGNS = [
     slug: "ml-research",
     title: "ML Research: Climate Prediction",
     description: "Training neural networks to predict local weather patterns using historical data. Need GPU cloud credits!",
-    goal: 500,
-    raised: 125,
+    goal: 25,
+    raised: 6.25,
     creator: "8yLLtg3DX98e08UKSEqcE6kCljfmU8nfQc84qTJosgBtV",
     category: "Research",
   },
@@ -27,8 +27,8 @@ const FEATURED_CAMPAIGNS = [
     slug: "robotics-arm",
     title: "3D Printed Robotic Arm",
     description: "Building a low-cost prosthetic arm prototype using 3D printing and Arduino for accessibility research.",
-    goal: 350,
-    raised: 280,
+    goal: 15,
+    raised: 12,
     creator: "9zMMug4EY09f19VLTFrdF7lDkmgnV9ogRd95rUKptgCuW",
     category: "Hardware",
   },
@@ -36,18 +36,18 @@ const FEATURED_CAMPAIGNS = [
 
 // Mock leaderboard data
 const TOP_DONORS = [
-  { rank: 1, address: "vitalik.sol", amount: 2450, badge: "Platinum", avatar: "V", projects: 12 },
-  { rank: 2, address: "satoshi.sol", amount: 1890, badge: "Platinum", avatar: "S", projects: 8 },
-  { rank: 3, address: "gavin.sol", amount: 1250, badge: "Gold", avatar: "G", projects: 15 },
-  { rank: 4, address: "anatoly.sol", amount: 980, badge: "Gold", avatar: "A", projects: 6 },
-  { rank: 5, address: "raj.sol", amount: 720, badge: "Silver", avatar: "R", projects: 9 },
+  { rank: 1, address: "vitalik.sol", amount: 125, badge: "Platinum", avatar: "V", projects: 12 },
+  { rank: 2, address: "satoshi.sol", amount: 95, badge: "Platinum", avatar: "S", projects: 8 },
+  { rank: 3, address: "gavin.sol", amount: 62, badge: "Gold", avatar: "G", projects: 15 },
+  { rank: 4, address: "anatoly.sol", amount: 48, badge: "Gold", avatar: "A", projects: 6 },
+  { rank: 5, address: "raj.sol", amount: 36, badge: "Silver", avatar: "R", projects: 9 },
 ];
 
 // Mock trending projects
 const TRENDING_PROJECTS = [
-  { title: "Quantum Computing Simulator", views: 12400, donations: 89, raised: 2100, trend: "+127%", category: "Research" },
-  { title: "AI-Powered Study Assistant", views: 9800, donations: 67, raised: 1450, trend: "+89%", category: "Engineering" },
-  { title: "Biodegradable Packaging Lab", views: 7200, donations: 45, raised: 890, trend: "+64%", category: "Science" },
+  { title: "Quantum Computing Simulator", views: 12400, donations: 89, raised: 105, trend: "+127%", category: "Research" },
+  { title: "AI-Powered Study Assistant", views: 9800, donations: 67, raised: 72, trend: "+89%", category: "Engineering" },
+  { title: "Biodegradable Packaging Lab", views: 7200, donations: 45, raised: 44, trend: "+64%", category: "Science" },
 ];
 
 // Mock milestone updates
@@ -72,10 +72,10 @@ const MILESTONE_UPDATES = [
 
 // Patron tier configuration
 const PATRON_TIERS = [
-  { name: "Bronze", minAmount: 10, color: "from-amber-700 to-amber-500", perks: ["Patron Badge", "Project Updates"] },
-  { name: "Silver", minAmount: 100, color: "from-zinc-400 to-zinc-300", perks: ["Bronze Perks", "Early Access", "Discord Role"] },
-  { name: "Gold", minAmount: 500, color: "from-yellow-500 to-amber-400", perks: ["Silver Perks", "Voting Rights", "Exclusive AMAs"] },
-  { name: "Platinum", minAmount: 1000, color: "from-cyan-400 to-blue-400", perks: ["Gold Perks", "Advisory Board", "Revenue Share"] },
+  { name: "Bronze", minAmount: 0.5, color: "from-amber-700 to-amber-500", perks: ["Patron Badge", "Project Updates"] },
+  { name: "Silver", minAmount: 5, color: "from-zinc-400 to-zinc-300", perks: ["Bronze Perks", "Early Access", "Discord Role"] },
+  { name: "Gold", minAmount: 25, color: "from-yellow-500 to-amber-400", perks: ["Silver Perks", "Voting Rights", "Exclusive AMAs"] },
+  { name: "Platinum", minAmount: 50, color: "from-cyan-400 to-blue-400", perks: ["Gold Perks", "Advisory Board", "Revenue Share"] },
 ];
 
 
@@ -408,8 +408,8 @@ export default function Home() {
                         <div className="text-right flex-shrink-0">
                           <span className={`text-[14px] sm:text-[18px] font-bold tracking-tight ${
                             donor.rank === 1 ? "text-[#14f195]" : "text-white"
-                          }`}>${donor.amount.toLocaleString()}</span>
-                          <p className="text-[9px] sm:text-[10px] font-medium text-zinc-600 uppercase tracking-wider">USDC</p>
+                          }`}>{donor.amount.toLocaleString()} SOL</span>
+                          <p className="text-[9px] sm:text-[10px] font-medium text-zinc-600 uppercase tracking-wider">SOLANA</p>
                         </div>
                       </div>
                     ))}
@@ -466,7 +466,7 @@ export default function Home() {
                     
                     {/* Tier info */}
                     <h4 className="text-[14px] sm:text-[17px] font-semibold text-white mb-0.5 sm:mb-1 tracking-tight">{tier.name}</h4>
-                    <p className="text-[10px] sm:text-[12px] text-zinc-600 mb-2 sm:mb-4 font-medium">${tier.minAmount}+ lifetime</p>
+                    <p className="text-[10px] sm:text-[12px] text-zinc-600 mb-2 sm:mb-4 font-medium">{tier.minAmount}+ SOL lifetime</p>
                     
                     {/* Perks - hidden on mobile for space */}
                     <div className="hidden sm:block space-y-2">
@@ -561,7 +561,7 @@ export default function Home() {
                     </div>
                     <div className="text-center">
                       <p className="text-[10px] sm:text-[11px] text-zinc-500 mb-1">Raised</p>
-                      <p className="text-[13px] sm:text-[14px] font-semibold text-[#14f195]">${project.raised}</p>
+                      <p className="text-[13px] sm:text-[14px] font-semibold text-[#14f195]">{project.raised} SOL</p>
                     </div>
                   </div>
                 </div>

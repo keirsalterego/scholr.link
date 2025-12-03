@@ -75,24 +75,24 @@ export async function GET(
     type: "action",
     icon: campaign.image,
     title: campaign.title,
-    description: `${campaign.description}\n\n💰 $${campaign.raised} / $${campaign.goal} raised (${percentRaised}%)`,
+    description: `${campaign.description}\n\n💰 ${campaign.raised} SOL / ${campaign.goal} SOL raised (${percentRaised}%)`,
     label: "Fund this project",
     links: {
       actions: [
         {
           type: "transaction",
-          label: "Donate 5 USDC",
-          href: `/api/actions/${slug}?amount=5`,
+          label: "Donate 0.25 SOL",
+          href: `/api/actions/${slug}?amount=0.25`,
         },
         {
           type: "transaction",
-          label: "Donate 20 USDC",
-          href: `/api/actions/${slug}?amount=20`,
+          label: "Donate 1 SOL",
+          href: `/api/actions/${slug}?amount=1`,
         },
         {
           type: "transaction",
-          label: "Donate 50 USDC",
-          href: `/api/actions/${slug}?amount=50`,
+          label: "Donate 2.5 SOL",
+          href: `/api/actions/${slug}?amount=2.5`,
         },
         {
           type: "transaction",
@@ -101,7 +101,7 @@ export async function GET(
           parameters: [
             {
               name: "amount",
-              label: "Enter USDC amount",
+              label: "Enter SOL amount",
               required: true,
               type: "number",
             },
@@ -213,7 +213,7 @@ export async function POST(
       fields: {
         type: "transaction",
         transaction,
-        message: `Thank you for supporting "${campaign.title}" with ${amount} USDC! 🎉 Your Patron Badge is on its way.`,
+        message: `Thank you for supporting "${campaign.title}" with ${amount} SOL! 🎉 Your Patron Badge is on its way.`,
       },
     });
 

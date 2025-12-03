@@ -22,6 +22,7 @@ type CreatedCampaign = {
   status: "active" | "completed";
   daysLeft: number;
   category: string;
+  createdAt: string;
 };
 
 export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampaign) => void }) {
@@ -116,6 +117,7 @@ export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampa
             0
           ),
           category: formData.category,
+          createdAt: new Date().toISOString().split("T")[0],
         };
 
         onCreated?.(newCampaign);
@@ -197,9 +199,8 @@ export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampa
         <div>
           <label htmlFor="goal" className={labelClasses}>Funding goal</label>
           <div className="relative">
-             <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-zinc-500 text-[14px] pointer-events-none">$</span>
-             <input type="number" id="goal" name="goal" required min={10} max={10000} placeholder="200" value={formData.goal} onChange={handleChange} className={`${inputClasses} pl-8`} />
-             <span className="absolute inset-y-0 right-0 pr-4 flex items-center text-zinc-500 text-[13px] pointer-events-none">USDC</span>
+             <input type="number" id="goal" name="goal" required min={1} max={1000} step={0.1} placeholder="10" value={formData.goal} onChange={handleChange} className={`${inputClasses} pr-14`} />
+             <span className="absolute inset-y-0 right-0 pr-4 flex items-center text-zinc-500 text-[13px] pointer-events-none">SOL</span>
           </div>
         </div>
         <div>
