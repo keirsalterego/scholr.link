@@ -77,7 +77,7 @@ export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampa
         throw new Error(errorData.details || "Backend failed to build transaction");
       }
 
-      const { transaction } = await resp.json();
+      const { transaction, campaignPda } = await resp.json();
 
       // 2. Deserialize securely (Browser safe, no Buffer)
       const txData = Uint8Array.from(atob(transaction), (c) => c.charCodeAt(0));
@@ -99,10 +99,7 @@ export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampa
         }
 
         // --- Success Logic ---
-        const slug = formData.title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)/g, "");
+        const slug = campaignPda as string; // use PDA as canonical slug
 
         const newCampaign: CreatedCampaign = {
           slug,
@@ -117,14 +114,14 @@ export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampa
             0
           ),
           category: formData.category,
-          createdAt: new Date().toISOString().split("T")[0],
+          createdAt: new Date().toISOString(),
         };
 
         onCreated?.(newCampaign);
 
         setShowSuccess({
           message: "Campaign created! Share your Blink link:",
-          link: `scholr.link/actions/${slug}`,
+          link: `scholr.link/api/actions/${slug}`,
         });
 
         setFormData({
@@ -162,9 +159,7 @@ export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampa
   };
 
   const generateBlinkUrl = () => {
-    if (!formData.title) return "";
-    const slug = formData.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-    return `scholr.link/api/actions/${slug}`;
+    return showSuccess?.link ?? "";
   };
 
   const inputClasses = "w-full px-4 py-3 bg-[#0d0d12] border border-white/[0.06] rounded-xl text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#14f195]/50 focus:border-[#14f195]/50 transition-all text-[14px]";

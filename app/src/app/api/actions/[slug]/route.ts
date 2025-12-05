@@ -12,35 +12,9 @@ import {
   clusterApiUrl,
 } from "@solana/web3.js";
 import * as anchor from "@coral-xyz/anchor";
-import scholrIdl from "../../../../idl/scholr_program.json" assert { type: "json" };
+import scholrIdl from "@/idl/scholr_program.json" assert { type: "json" };
 import { TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync } from "@solana/spl-token";
-
-// Mock campaign data - in production, fetch from on-chain or database
-const MOCK_CAMPAIGNS: Record<string, {
-  title: string;
-  description: string;
-  goal: number;
-  raised: number;
-  authority: string;
-  image: string;
-}> = {
-  "rust-os": {
-    title: "Rust OS Kernel Project",
-    description: "Building a minimal OS kernel in Rust for my final year project. Need funds for a Raspberry Pi cluster!",
-    goal: 200,
-    raised: 50,
-    authority: "11111111111111111111111111111111", // placeholder
-    image: "https://raw.githubusercontent.com/nicosantangelo/Solana-Buttons/master/docs/images/blink-preview.png",
-  },
-  "ml-research": {
-    title: "ML Research: Climate Prediction",
-    description: "Training neural networks to predict local weather patterns. Need GPU cloud credits!",
-    goal: 500,
-    raised: 125,
-    authority: "11111111111111111111111111111111",
-    image: "https://raw.githubusercontent.com/nicosantangelo/Solana-Buttons/master/docs/images/blink-preview.png",
-  },
-};
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
 // Devnet connection
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
@@ -60,20 +34,40 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const campaign = MOCK_CAMPAIGNS[slug];
+  // slug is the campaign PDA (base58)
+  let pda: PublicKey;
+  try {
+    pda = new PublicKey(slug);
+  } catch {
+    return new Response(JSON.stringify({ error: "Invalid campaign address" }), {
+      status: 400,
+      headers: ACTIONS_CORS_HEADERS,
+    });
+  }
 
-  if (!campaign) {
+  const idl = scholrIdl as any;
+  const coder = new anchor.BorshAccountsCoder(idl);
+  const info = await connection.getAccountInfo(pda);
+  if (!info) {
     return new Response(JSON.stringify({ error: "Campaign not found" }), {
       status: 404,
       headers: ACTIONS_CORS_HEADERS,
     });
   }
+  const decoded: any = coder.decode("Campaign", info.data);
+  const campaign = {
+    title: decoded.title as string,
+    description: (decoded.metadataUri as string) ?? "",
+    goal: Number(decoded.goal),
+    raised: Number(decoded.raised),
+    authority: (decoded.authority as PublicKey).toBase58(),
+  };
 
   const percentRaised = Math.round((campaign.raised / campaign.goal) * 100);
   
   const payload: ActionGetResponse = {
     type: "action",
-    icon: campaign.image,
+    icon: "https://raw.githubusercontent.com/nicosantangelo/Solana-Buttons/master/docs/images/blink-preview.png",
     title: campaign.title,
     description: `${campaign.description}\n\n💰 ${campaign.raised} SOL / ${campaign.goal} SOL raised (${percentRaised}%)`,
     label: "Fund this project",
@@ -133,11 +127,12 @@ export async function POST(
 ) {
   try {
     const { slug } = await params;
-    const campaign = MOCK_CAMPAIGNS[slug];
-
-    if (!campaign) {
-      return new Response(JSON.stringify({ error: "Campaign not found" }), {
-        status: 404,
+    let pda: PublicKey;
+    try {
+      pda = new PublicKey(slug);
+    } catch {
+      return new Response(JSON.stringify({ error: "Invalid campaign address" }), {
+        status: 400,
         headers: ACTIONS_CORS_HEADERS,
       });
     }
@@ -168,13 +163,13 @@ export async function POST(
     );
     const program = new anchor.Program(
       scholrIdl as anchor.Idl,
-      programId as any,
-      provider as any
+      programId,
+      provider
     );
 
-    // Derive campaign PDA from authority placeholder and title
-    const authority = new PublicKey(campaign.authority);
-    const campaignPda = getCampaignPda(authority, campaign.title);
+    // Fetch campaign to include title in message
+    const account = await (program.account as any)["campaign"].fetch(pda);
+    const title = (account.title as string) ?? "this campaign";
 
     // Generate a new mint keypair for Token-2022 badge
     const mint = anchor.web3.Keypair.generate();
@@ -187,9 +182,9 @@ export async function POST(
 
     // Build the donate instruction using Anchor's method builder
     const ix = await program.methods
-      .donate(new anchor.BN(Math.round(amount * 1_000_000))) // amount in micro units for demo
+      .donate(new anchor.BN(Math.round(amount * LAMPORTS_PER_SOL)))
       .accounts({
-        campaign: campaignPda,
+        campaign: pda,
         signer: userPubkey,
         mint: mint.publicKey,
         tokenAccount,
@@ -213,7 +208,7 @@ export async function POST(
       fields: {
         type: "transaction",
         transaction,
-        message: `Thank you for supporting "${campaign.title}" with ${amount} SOL! 🎉 Your Patron Badge is on its way.`,
+        message: `Thank you for supporting "${title}" with ${amount} SOL! 🎉 Your Patron Badge is on its way.`,
       },
     });
 

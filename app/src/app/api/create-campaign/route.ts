@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       preflightCommitment: "confirmed",
     });
 
-    // CORRECTED: Constructor signature (IDL, Provider)
+    // Anchor v0.32: Program(idl, provider) - programId from idl.address
     const program = new anchor.Program(
       scholrIdl as anchor.Idl,
       provider

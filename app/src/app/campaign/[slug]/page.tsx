@@ -1,99 +1,63 @@
 import Link from "next/link";
 import * as anchor from "@coral-xyz/anchor";
-import scholrIdl from "../../../idl/scholr_program.json" assert { type: "json" };
+import scholrIdl from "@/idl/scholr_program.json" assert { type: "json" };
 import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
 
-// Mock campaigns data
-const CAMPAIGNS: Record<string, {
-  title: string;
-  description: string;
-  goal: number;
-  raised: number;
-  creator: string;
-  deadline: string;
-  category: string;
-}> = {
-  "rust-os": {
-    title: "Rust OS Kernel Project",
-    description: "Building a minimal OS kernel in Rust for my final year project. This project aims to create a lightweight, memory-safe operating system kernel that can run on Raspberry Pi devices.\n\nThe funds will be used to purchase a cluster of 4 Raspberry Pi 5 units for testing concurrent process handling and memory management implementations.\n\nKey milestones:\n• Basic bootloader implementation\n• Memory management system\n• Process scheduler\n• Basic filesystem support",
-    goal: 10,
-    raised: 2.5,
-    creator: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
-    deadline: "2024-03-15",
-    category: "Engineering",
-  },
-  "ml-research": {
-    title: "ML Research: Climate Prediction",
-    description: "Training neural networks to predict local weather patterns using historical data from the past 50 years. This research could help local farmers and communities prepare for extreme weather events.\n\nThe funds will be used for GPU cloud computing credits on AWS/GCP to train large-scale transformer models on climate data.\n\nExpected outcomes:\n• Trained model with 85%+ accuracy on 7-day forecasts\n• Published research paper\n• Open-source codebase",
-    goal: 25,
-    raised: 6.25,
-    creator: "8yLLtg3DX98e08UKSEqcE6kCljfmU8nfQc84qTJosgBtV",
-    deadline: "2024-04-01",
-    category: "Research",
-  },
-  "robotics-arm": {
-    title: "3D Printed Robotic Arm",
-    description: "Building a low-cost prosthetic arm prototype using 3D printing and Arduino for accessibility research. The goal is to create an affordable alternative to expensive prosthetics.\n\nFunds will cover:\n• 3D printing materials (PLA, TPU)\n• Arduino components and servos\n• Sensors and haptic feedback modules\n• Testing and iteration costs",
-    goal: 17.5,
-    raised: 14,
-    creator: "9zMMug4EY09f19VLTFrdF7lDkmgnV9ogRd95rUKptgCuW",
-    deadline: "2024-02-28",
-    category: "Hardware",
-  },
-};
-
-export default async function CampaignPage({ 
-  params 
-}: { 
-  params: Promise<{ slug: string }> 
-}) {
-  const { slug } = await params;
-  let campaign = CAMPAIGNS[slug];
-
-  if (!campaign) {
-    // Fallback for newly created campaigns not present in mock data
-    campaign = {
-      title: slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-      description: "This campaign was just created. Details will appear once synced.",
-      goal: 0,
-      raised: 0,
-      creator: "unknown",
-      deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-      category: "Other",
-    };
+async function fetchCampaignByPda(pdaStr: string) {
+  // Validate PDA
+  let pda: PublicKey;
+  try {
+    pda = new PublicKey(pdaStr);
+  } catch {
+    return null;
   }
 
-  // Try on-chain fetch by deriving PDA from a heuristic: use a creator from CAMPAIGNS or skip
+  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+  const programId = new PublicKey((scholrIdl as any).address);
+  const provider = new anchor.AnchorProvider(
+    connection,
+    {
+      publicKey: PublicKey.default,
+      signTransaction: async (tx: any) => tx,
+      signAllTransactions: async (txs: any[]) => txs,
+    } as any,
+    { preflightCommitment: "confirmed" }
+  );
+  const program = new anchor.Program(
+    scholrIdl as anchor.Idl,
+    programId,
+    provider
+  );
+
   try {
-    const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-    const programId = new PublicKey((scholrIdl as any).address);
-    // Attempt with a dummy authority for slugs not in mock; in real flow, pass authority in URL or look up by index
-    const authority = new PublicKey(campaign.creator.length === 44 ? campaign.creator : "11111111111111111111111111111111");
-    const [pda] = PublicKey.findProgramAddressSync(
-      [Buffer.from("campaign"), authority.toBuffer(), Buffer.from(slug)],
-      programId
-    );
-    const idl = scholrIdl as any;
-    const coder = new anchor.BorshAccountsCoder(idl);
-    const accountInfo = await connection.getAccountInfo(pda);
-    if (accountInfo) {
-      const decoded = coder.decode("Campaign", accountInfo.data);
-      campaign = {
-        title: decoded.title,
-        description: decoded.metadataUri,
-        goal: Number(decoded.goal),
-        raised: Number(decoded.raised),
-        creator: decoded.authority.toBase58(),
-        deadline: campaign.deadline,
-        category: campaign.category,
-      };
-    }
-  } catch {}
+    const account = await (program.account as any)["campaign"].fetch(pda);
+    return {
+      pda: pdaStr,
+      title: account.title as string,
+      description: (account.metadataUri as string) ?? "",
+      goal: Number(account.goal),
+      raised: Number(account.raised),
+      creator: (account.authority as anchor.web3.PublicKey).toBase58(),
+      category: "Research",
+    };
+  } catch {
+    return null;
+  }
+}
+
+export default async function CampaignPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const campaign = await fetchCampaignByPda(slug);
+  if (!campaign) return notFound();
 
   const percentRaised = Math.round((campaign.raised / campaign.goal) * 100);
   const blinkUrl = `https://scholr.link/api/actions/${slug}`;
   const dialUrl = `https://dial.to/?action=solana-action:${encodeURIComponent(blinkUrl)}`;
-  const daysLeft = Math.max(0, Math.ceil((new Date(campaign.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+  const daysLeft = 0;
 
   return (
     <div className="min-h-screen pt-20 sm:pt-24 pb-12 lg:pb-20">
