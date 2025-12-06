@@ -4,6 +4,7 @@ import "./globals.css";
 import { WalletContextProvider } from "@/contexts/WalletContextProvider";
 import { AuthProvider } from "@/components/AuthProvider";
 import { Navbar } from "@/components/Navbar";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const dmSans = DM_Sans({
   variable: "--font-sans",
@@ -41,8 +42,10 @@ export default function RootLayout({
       >
         <AuthProvider>
           <WalletContextProvider>
-            <Navbar />
-            <main>{children}</main>
+            <SmoothScroll>
+              <Navbar />
+              <main>{children}</main>
+            </SmoothScroll>
           </WalletContextProvider>
         </AuthProvider>
       </body>

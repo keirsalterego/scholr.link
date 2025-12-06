@@ -1,9 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { CreateCampaignForm } from "@/components/CreateCampaignForm";
+
+// Lazy load the heavy form component
+const CreateCampaignForm = dynamic(() => import("@/components/CreateCampaignForm").then(mod => ({ default: mod.CreateCampaignForm })), {
+  loading: () => (
+    <div className="space-y-6 animate-pulse">
+      <div className="h-12 bg-zinc-800/50 rounded-xl" />
+      <div className="h-32 bg-zinc-800/50 rounded-xl" />
+      <div className="h-12 bg-zinc-800/50 rounded-xl" />
+    </div>
+  ),
+  ssr: false
+});
 
 // Mock user stats
 const USER_STATS = {
@@ -83,7 +95,43 @@ type TabType = "overview" | "campaigns" | "donations" | "create";
 export default function DashboardPage() {
   const { connected, publicKey } = useWallet();
   const [activeTab, setActiveTab] = useState<TabType>("overview");
-  const [myCampaigns, setMyCampaigns] = useState(SEED_CAMPAIGNS);
+  const [myCampaigns, setMyCampaigns] = useState<typeof SEED_CAMPAIGNS>([]);
+  const [hasLoadedFromStorage, setHasLoadedFromStorage] = useState(false);
+
+  // Load campaigns from localStorage when wallet connects/changes
+  useEffect(() => {
+    if (publicKey && typeof window !== 'undefined') {
+      const storageKey = `campaigns_${publicKey.toBase58()}`;
+      const stored = localStorage.getItem(storageKey);
+      console.log("Loading campaigns from localStorage:", storageKey, stored);
+      if (stored) {
+        try {
+          const campaigns = JSON.parse(stored);
+          console.log("Loaded campaigns:", campaigns);
+          setMyCampaigns(campaigns);
+          setHasLoadedFromStorage(true);
+        } catch (e) {
+          console.error("Failed to parse stored campaigns:", e);
+          setMyCampaigns([]);
+          setHasLoadedFromStorage(true);
+        }
+      } else {
+        // No stored campaigns, start with empty array for new wallet
+        console.log("No stored campaigns found, starting fresh");
+        setMyCampaigns([]);
+        setHasLoadedFromStorage(true);
+      }
+    }
+  }, [publicKey]);
+
+  // Save campaigns to localStorage whenever they change (but only after initial load)
+  useEffect(() => {
+    if (publicKey && typeof window !== 'undefined' && hasLoadedFromStorage) {
+      const storageKey = `campaigns_${publicKey.toBase58()}`;
+      console.log("Saving campaigns to localStorage:", storageKey, myCampaigns);
+      localStorage.setItem(storageKey, JSON.stringify(myCampaigns));
+    }
+  }, [myCampaigns, publicKey, hasLoadedFromStorage]);
 
   const tabs = [
     { id: "overview" as TabType, label: "Overview", icon: "grid" },
@@ -589,40 +637,80 @@ export default function DashboardPage() {
 
             {/* Create Tab */}
             {activeTab === "create" && (
-              <div className="max-w-xl mx-auto">
-                {/* Form Card */}
-                <div className="glass-card rounded-xl sm:rounded-2xl p-5 sm:p-8">
-                  <div className="mb-6 sm:mb-8">
-                    <h2 className="text-[18px] sm:text-[20px] font-semibold text-white mb-2">Create a Campaign</h2>
-                    <p className="text-[13px] sm:text-[14px] text-zinc-500">Set up your funding campaign and share it on social media.</p>
+              <div className="max-w-2xl mx-auto">
+                {/* Header */}
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#14f195]/20 to-[#9945ff]/20 border border-[#14f195]/20 mb-4">
+                    <svg className="w-7 h-7 text-[#14f195]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
                   </div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Create a Campaign</h2>
+                  <p className="text-sm text-zinc-500 max-w-md mx-auto">
+                    Set up your funding campaign in minutes. Share on X and start receiving donations through Solana Blinks.
+                  </p>
+                </div>
+
+                {/* Form Card */}
+                <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-800/50 rounded-2xl p-6 sm:p-8">
                   <CreateCampaignForm onCreated={(c) => {
-                    setMyCampaigns((prev) => [c, ...prev]);
+                    console.log("Campaign created, adding to dashboard:", c);
+                    setMyCampaigns((prev) => {
+                      const updated = [c, ...prev];
+                      console.log("Updated campaigns list:", updated);
+                      return updated;
+                    });
                     setActiveTab("campaigns");
                   }} />
                 </div>
 
-                {/* Tips */}
-                <div className="mt-6 glass-card rounded-xl p-5">
-                  <h3 className="text-[14px] font-medium text-zinc-300 mb-4 flex items-center gap-2">
-                    <svg className="w-4 h-4 text-[#14f195]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
-                    Tips for success
-                  </h3>
-                  <ul className="space-y-3">
-                    {[
-                      "Keep your title concise—it's displayed in the Blink preview",
-                      "Be specific about how funds will be used",
-                      "Set a realistic goal that's achievable within your deadline",
-                      "Share in relevant communities where people care about your topic",
-                    ].map((tip, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-[13px] text-zinc-500">
-                        <span className="text-[#14f195] mt-0.5">✓</span>
-                        {tip}
-                      </li>
-                    ))}
-                  </ul>
+                {/* Tips Section */}
+                <div className="mt-6 grid sm:grid-cols-2 gap-4">
+                  <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-xl p-5">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-8 h-8 rounded-lg bg-[#14f195]/10 flex items-center justify-center">
+                        <svg className="w-4 h-4 text-[#14f195]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-sm font-semibold text-white">Tips for success</h3>
+                    </div>
+                    <ul className="space-y-2">
+                      {[
+                        "Keep your title short and catchy",
+                        "Be specific about fund usage",
+                        "Set a realistic, achievable goal",
+                      ].map((tip, i) => (
+                        <li key={i} className="flex items-start gap-2 text-xs text-zinc-500">
+                          <span className="text-[#14f195] mt-0.5">✓</span>
+                          {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-xl p-5">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-8 h-8 rounded-lg bg-[#9945ff]/10 flex items-center justify-center">
+                        <svg className="w-4 h-4 text-[#9945ff]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-sm font-semibold text-white">How it works</h3>
+                    </div>
+                    <ol className="space-y-2">
+                      {[
+                        "Create your campaign here",
+                        "Share the link on X (Twitter)",
+                        "Followers donate via Blinks",
+                      ].map((step, i) => (
+                        <li key={i} className="flex items-start gap-2 text-xs text-zinc-500">
+                          <span className="text-[#9945ff] font-medium">{i + 1}.</span>
+                          {step}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
                 </div>
               </div>
             )}

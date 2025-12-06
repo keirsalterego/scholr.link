@@ -1,7 +1,13 @@
-import { CampaignCard } from "@/components/CampaignCard";
+import dynamic from "next/dynamic";
 import * as anchor from "@coral-xyz/anchor";
 import scholrIdl from "@/idl/scholr_program.json" assert { type: "json" };
 import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
+
+// Lazy load CampaignCard for better performance
+const CampaignCard = dynamic(() => import("@/components/CampaignCard").then(mod => ({ default: mod.CampaignCard })), {
+  loading: () => <div className="h-[300px] bg-zinc-900/50 rounded-2xl animate-pulse" />,
+  ssr: true
+});
 
 interface Campaign {
   slug: string;

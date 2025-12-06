@@ -1,7 +1,19 @@
+"use client";
+
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { CampaignCard } from "@/components/CampaignCard";
-import { BlinkPreview } from "@/components/BlinkPreview";
-import { SoulboundBadge3D } from "@/components/SoulboundBadge3D";
+
+// Lazy load heavy components
+const BlinkPreview = dynamic(() => import("@/components/BlinkPreview").then(mod => ({ default: mod.BlinkPreview })), {
+  loading: () => <div className="h-[400px] bg-zinc-900/50 rounded-2xl animate-pulse" />,
+  ssr: false
+});
+
+const SoulboundBadge3D = dynamic(() => import("@/components/SoulboundBadge3D").then(mod => ({ default: mod.SoulboundBadge3D })), {
+  loading: () => <div className="h-[300px] bg-zinc-900/50 rounded-2xl animate-pulse" />,
+  ssr: false
+});
 
 // Mock featured campaigns
 const FEATURED_CAMPAIGNS = [

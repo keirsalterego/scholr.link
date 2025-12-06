@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import Link from "next/link";
 
 interface CampaignCardProps {
@@ -123,3 +124,6 @@ export function CampaignCard({
     </Link>
   );
 }
+
+// Memoize to prevent unnecessary re-renders
+export const MemoizedCampaignCard = memo(CampaignCard);

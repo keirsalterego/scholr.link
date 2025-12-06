@@ -151,27 +151,68 @@ export function NavbarLogo({ className = "" }: NavbarLogoProps) {
   const { scrolled } = useContext(NavbarContext);
   
   return (
-    <Link href="/" className={`relative flex items-center gap-3 group ${className}`}>
-      {/* Logo mark */}
+    <Link href="/" className={`relative flex items-center gap-2.5 group ${className}`}>
+      {/* Logo Icon */}
       <div className="relative">
         {/* Glow effect */}
-        <div className={`absolute -inset-1 bg-gradient-to-br from-[#14f195] to-[#9945ff] rounded-xl blur-md transition-all duration-500 ${
-          scrolled ? "opacity-40 group-hover:opacity-70" : "opacity-50 group-hover:opacity-80"
+        <div className={`absolute -inset-1 bg-gradient-to-br from-[#14f195] to-[#9945ff] rounded-lg blur-md transition-all duration-500 ${
+          scrolled ? "opacity-30 group-hover:opacity-60" : "opacity-40 group-hover:opacity-70"
         }`} />
         
         {/* Logo container */}
         <motion.div 
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.2 }}
-          className={`relative rounded-xl bg-gradient-to-br from-[#14f195] via-[#00d4aa] to-[#9945ff] flex items-center justify-center shadow-lg transition-all duration-300 ${
+          className={`relative rounded-lg bg-[#0a0a0f] border border-[#14f195]/20 flex items-center justify-center shadow-lg transition-all duration-300 ${
             scrolled ? "w-8 h-8" : "w-9 h-9"
           }`}
         >
-          {/* Inner shine */}
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-transparent via-white/10 to-white/30" />
-          <span className={`relative font-bold text-[#0a0a0f] transition-all duration-300 ${
-            scrolled ? "text-[12px]" : "text-[14px]"
-          }`}>S</span>
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-[#14f195]/10 to-[#9945ff]/10" />
+          
+          {/* Custom S Logo */}
+          <svg 
+            className={`relative transition-all duration-300 ${scrolled ? "w-4 h-4" : "w-5 h-5"}`}
+            viewBox="0 0 24 24" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {/* Academic cap/mortarboard design integrated with S */}
+            <path 
+              d="M12 3L2 8L12 13L22 8L12 3Z" 
+              fill="url(#logo-gradient-1)"
+              stroke="url(#logo-gradient-2)"
+              strokeWidth="0.5"
+            />
+            <path 
+              d="M2 8V14C2 14 4 17 12 17C20 17 22 14 22 14V8" 
+              stroke="url(#logo-gradient-2)"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              fill="none"
+            />
+            {/* S letter formed by the design */}
+            <path 
+              d="M12 10C12 10 14 10.5 14 12C14 13.5 12 14 12 14C12 14 10 14 10 15.5C10 17 12 17.5 12 17.5" 
+              stroke="#14f195"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            
+            {/* Gradients */}
+            <defs>
+              <linearGradient id="logo-gradient-1" x1="2" y1="3" x2="22" y2="13" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#14f195" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#9945ff" stopOpacity="0.3" />
+              </linearGradient>
+              <linearGradient id="logo-gradient-2" x1="2" y1="8" x2="22" y2="17" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#14f195" />
+                <stop offset="100%" stopColor="#00d4aa" />
+              </linearGradient>
+            </defs>
+          </svg>
         </motion.div>
       </div>
       
@@ -181,7 +222,7 @@ export function NavbarLogo({ className = "" }: NavbarLogoProps) {
         animate={{ opacity: scrolled ? 0 : 1, width: scrolled ? 0 : "auto" }}
         transition={{ duration: 0.3 }}
       >
-        <span className="text-[16px] font-semibold text-white tracking-[-0.02em] leading-tight whitespace-nowrap">
+        <span className="text-[16px] font-bold text-white tracking-[-0.03em] leading-tight whitespace-nowrap">
           Scholr<span className="text-[#14f195]">Link</span>
         </span>
         <span className="text-[10px] text-zinc-500 font-medium tracking-wide hidden sm:block whitespace-nowrap">
