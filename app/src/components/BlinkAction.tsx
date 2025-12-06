@@ -24,7 +24,7 @@ export function BlinkAction({ actionUrl, className }: BlinkActionProps) {
   const { adapter } = useBlinkSolanaWalletAdapter(connection);
   
   // Fetch the blink data from your API
-  const { blink, isLoading, error } = useBlink({ url: actionUrl });
+  const { blink, isLoading } = useBlink({ url: actionUrl });
 
   // Show development notice for localhost
   if (isLocalhost) {
@@ -72,7 +72,7 @@ export function BlinkAction({ actionUrl, className }: BlinkActionProps) {
     );
   }
 
-  if (error || !blink) {
+  if (!blink) {
     return (
       <div className={`bg-zinc-900 border border-zinc-800 rounded-2xl p-6 ${className}`}>
         <div className="text-center py-8">
