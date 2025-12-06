@@ -79,24 +79,43 @@ export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampa
 
       const { transaction, campaignPda } = await resp.json();
 
-      // 2. Deserialize securely (Browser safe, no Buffer)
-      const txData = Uint8Array.from(atob(transaction), (c) => c.charCodeAt(0));
-      const tx = Transaction.from(txData);
+      if (!transaction || !campaignPda) {
+        throw new Error("Backend returned invalid transaction data");
+      }
 
-      // 3. Send Transaction with Debug Logging
+      console.log("Frontend: Received transaction from backend for campaign:", campaignPda);
+
+      // 2. Deserialize securely (Browser safe, no Buffer)
       try {
+        const txData = Uint8Array.from(atob(transaction), (c) => c.charCodeAt(0));
+        const tx = Transaction.from(txData);
+        
+        console.log("Frontend: Transaction deserialized");
+        console.log("Frontend: Fee Payer:", tx.feePayer?.toBase58());
+        console.log("Frontend: Recent Blockhash:", tx.recentBlockhash);
+        console.log("Frontend: Instructions count:", tx.instructions.length);
+        
+        // Ensure the transaction is properly signed by the connected wallet
+        tx.feePayer = publicKey;
+
+        // 3. Send Transaction with Debug Logging
+        console.log("Frontend: Sending transaction to wallet...");
+        
         const signature = await sendTransaction(tx, connection, { 
-          skipPreflight: true, // Set TRUE if you want to bypass simulation (risky)
-          maxRetries: 5
+          skipPreflight: false,
+          maxRetries: 2
         });
 
         console.log("Transaction Signature:", signature);
         
+        console.log("Frontend: Waiting for confirmation...");
         const confirmation = await connection.confirmTransaction(signature, "confirmed");
 
         if (confirmation.value.err) {
-          throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}`);
+          throw new Error(`Transaction failed on-chain: ${JSON.stringify(confirmation.value.err)}`);
         }
+        
+        console.log("Frontend: Transaction confirmed successfully");
 
         // --- Success Logic ---
         const slug = campaignPda as string; // use PDA as canonical slug
@@ -134,20 +153,29 @@ export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampa
 
       } catch (sendErr: any) {
         console.error("Wallet Send Error:", sendErr);
+        console.error("Error Type:", sendErr.constructor?.name);
+        console.error("Error Stack:", sendErr.stack);
         
         // Extract simulation logs if available
         const logs = sendErr.logs || (sendErr.error && sendErr.error.logs);
-        if (logs) {
-          console.error("Simulation Logs:", logs);
-          // Throw the last log line which usually contains the program error
-          throw new Error(`Simulation Failed: ${logs[logs.length - 1]}`);
+        if (logs && Array.isArray(logs)) {
+          console.error("Program Logs:", logs);
+          // Find program error message in logs
+          const errorLog = logs.find((log: string) => log.includes("Error") || log.includes("failed"));
+          if (errorLog) {
+            throw new Error(`Program Error: ${errorLog}`);
+          }
         }
 
         if (String(sendErr).includes("User rejected")) {
            throw new Error("Transaction cancelled by user.");
         }
 
-        throw new Error(sendErr.message || "Transaction simulation failed.");
+        if (String(sendErr).includes("Unexpected error")) {
+          throw new Error("Wallet connection error. Try reconnecting your wallet.");
+        }
+
+        throw new Error(sendErr.message || "Failed to send transaction to blockchain.");
       }
 
     } catch (error: any) {

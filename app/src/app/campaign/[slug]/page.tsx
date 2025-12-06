@@ -13,7 +13,6 @@ async function fetchCampaignByPda(pdaStr: string) {
   }
 
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-  const programId = new PublicKey((scholrIdl as any).address);
   const provider = new anchor.AnchorProvider(
     connection,
     {
@@ -25,7 +24,6 @@ async function fetchCampaignByPda(pdaStr: string) {
   );
   const program = new anchor.Program(
     scholrIdl as anchor.Idl,
-    programId,
     provider
   );
 

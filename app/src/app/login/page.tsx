@@ -1,14 +1,28 @@
 "use client";
 
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function LoginPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Check for auth errors in URL
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    if (errorParam) {
+      setError(
+        errorParam === "auth_error"
+          ? "Authentication failed. Please try again."
+          : `Authentication error: ${errorParam}`
+      );
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (session) {
@@ -18,10 +32,20 @@ export default function LoginPage() {
 
   const handleSignIn = async () => {
     setIsLoading(true);
+    setError(null);
     try {
-      await signIn("twitter", { callbackUrl: "/dashboard" });
+      const result = await signIn("twitter", { 
+        callbackUrl: "/dashboard",
+        redirect: true,
+      });
+      
+      if (result?.error) {
+        setError("Sign in failed. Please check your credentials and try again.");
+        console.error("Sign in error:", result.error);
+      }
     } catch (error) {
       console.error("Sign in error:", error);
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -59,6 +83,19 @@ export default function LoginPage() {
             <h1 className="text-2xl font-bold text-white mb-2">Welcome back</h1>
             <p className="text-zinc-400 text-sm">Sign in with X to continue to ScholrLink</p>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+              <p className="text-sm text-red-400">{error}</p>
+              <button
+                onClick={() => setError(null)}
+                className="text-xs text-red-500/60 hover:text-red-400 mt-2 underline"
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
 
           {/* Sign in button */}
           <button

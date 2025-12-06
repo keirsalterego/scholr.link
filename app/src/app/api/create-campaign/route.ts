@@ -67,6 +67,10 @@ export async function POST(req: NextRequest) {
       provider
     );
 
+    console.log("Backend: Program ID:", programId.toBase58());
+    console.log("Backend: Campaign PDA:", campaignPda.toBase58());
+    console.log("Backend: Signer:", signerPk.toBase58());
+
     const ix = await program.methods
       .initializeCampaign(title, new anchor.BN(goal), metadataUri)
       .accounts({
@@ -85,10 +89,13 @@ export async function POST(req: NextRequest) {
     tx.recentBlockhash = blockhash;
     tx.lastValidBlockHeight = lastValidBlockHeight;
 
+    // Serialize with verifySignatures: false to allow wallet adapter to handle signing
     const serialized = tx.serialize({
       requireAllSignatures: false,
       verifySignatures: false,
     });
+
+    console.log("Backend: Transaction built successfully for campaign:", campaignPda.toBase58());
 
     return new Response(
       JSON.stringify({
