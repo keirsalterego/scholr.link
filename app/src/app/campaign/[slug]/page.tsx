@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import * as anchor from "@coral-xyz/anchor";
 import scholrIdl from "@/idl/scholr_program.json" assert { type: "json" };
 import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";

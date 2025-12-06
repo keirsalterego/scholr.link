@@ -163,7 +163,6 @@ export async function POST(
     );
     const program = new anchor.Program(
       scholrIdl as anchor.Idl,
-      programId,
       provider
     );
 

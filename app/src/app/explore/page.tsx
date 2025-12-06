@@ -3,6 +3,16 @@ import * as anchor from "@coral-xyz/anchor";
 import scholrIdl from "@/idl/scholr_program.json" assert { type: "json" };
 import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
 
+interface Campaign {
+  slug: string;
+  title: string;
+  description: string;
+  goal: number;
+  raised: number;
+  creator: string;
+  category: string;
+}
+
 const CATEGORIES = [
   { id: "all", label: "All" },
   { id: "research", label: "Research" },
@@ -12,9 +22,8 @@ const CATEGORIES = [
   { id: "social", label: "Social Impact" },
 ];
 
-async function fetchCampaigns() {
+async function fetchCampaigns(): Promise<Campaign[]> {
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-  const programId = new PublicKey((scholrIdl as any).address);
 
   // Dummy wallet provider for read-only
   const provider = new anchor.AnchorProvider(
@@ -29,12 +38,11 @@ async function fetchCampaigns() {
 
   const program = new anchor.Program(
     scholrIdl as anchor.Idl,
-    programId,
     provider
   );
 
   const all = await (program.account as any)["campaign"].all();
-  return all.map(({ publicKey, account }) => ({
+  return all.map(({ publicKey, account }: any) => ({
     slug: publicKey.toBase58(),
     title: account.title as string,
     description: (account.metadataUri as string) ?? "",

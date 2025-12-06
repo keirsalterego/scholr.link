@@ -2,10 +2,10 @@
 
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 
-export default function LoginPage() {
+function LoginContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -34,19 +34,13 @@ export default function LoginPage() {
     setIsLoading(true);
     setError(null);
     try {
-      const result = await signIn("twitter", { 
+      await signIn("twitter", { 
         callbackUrl: "/dashboard",
         redirect: true,
       });
-      
-      if (result?.error) {
-        setError("Sign in failed. Please check your credentials and try again.");
-        console.error("Sign in error:", result.error);
-      }
     } catch (error) {
       console.error("Sign in error:", error);
       setError("An unexpected error occurred. Please try again.");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -164,5 +158,17 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-[#14f195] border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }
