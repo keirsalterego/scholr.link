@@ -19,6 +19,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientId: process.env.TWITTER_CLIENT_ID!,
       clientSecret: process.env.TWITTER_CLIENT_SECRET!,
       allowDangerousEmailAccountLinking: true,
+        // @ts-expect-error Twitter provider supports OAuth 2.0 via `version` flag
+      version: "2.0",
+      // Twitter (X) OAuth2 requires the callback URL to be whitelisted in the app settings
+      // and uses clientId/clientSecret (not the old API key/secret pair).
     }),
   ],
   callbacks: {
