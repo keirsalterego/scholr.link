@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
-import { Transaction } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, Transaction } from "@solana/web3.js";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface FormData {
@@ -188,12 +188,32 @@ export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampa
           createdAt: new Date().toISOString(),
         };
 
+        try {
+          await fetch("/api/user-campaigns", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              slug,
+              title: formData.title,
+              description: formData.description,
+              goalLamports: Math.round(Number(formData.goal) * LAMPORTS_PER_SOL),
+              category: formData.category,
+              creator: publicKey.toBase58(),
+              metadataUri: "https://example.com/placeholder-meta.json",
+              status: "active",
+            }),
+          });
+        } catch (persistErr) {
+          console.warn("Failed to persist campaign metadata", persistErr);
+        }
+
         console.log("Calling onCreated callback with:", newCampaign);
         onCreated?.(newCampaign);
 
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://scholr.link";
         setShowSuccess({
           message: "Campaign created successfully!",
-          link: `scholr.link/api/actions/${slug}`,
+          link: `${baseUrl}/api/actions/${slug}`,
         });
 
         setFormData({
@@ -300,7 +320,23 @@ export function CreateCampaignForm({ onCreated }: { onCreated?: (c: CreatedCampa
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white">{showSuccess.message}</p>
               {showSuccess.link && (
-                <p className="mt-1.5 text-xs text-[#14f195] font-mono break-all bg-[#14f195]/5 px-2 py-1 rounded">{showSuccess.link}</p>
+                <>
+                  <p className="mt-1.5 text-xs text-[#14f195] font-mono break-all bg-[#14f195]/5 px-2 py-1 rounded">{showSuccess.link}</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const tweetText = encodeURIComponent(
+                        `Support my project on ScholrLink!\n\nCheck it out: ${showSuccess.link} #solana #crowdfunding @ScholrLink`
+                      );
+                      const tweetUrl = `https://x.com/intent/tweet?text=${tweetText}`;
+                      window.open(tweetUrl, "_blank");
+                    }}
+                    className="mt-2 flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1d9bf0] text-white font-semibold text-xs hover:bg-[#0a8ddb] transition-all"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                    Share on X
+                  </button>
+                </>
               )}
             </div>
             <button type="button" onClick={() => setShowSuccess(null)} className="text-zinc-500 hover:text-white p-1">

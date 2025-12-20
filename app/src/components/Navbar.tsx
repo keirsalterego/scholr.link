@@ -60,63 +60,68 @@ export function Navbar() {
 
   return (
     <ResizableNavbar>
-      {/* Desktop Navigation */}
-      <NavBody>
-        <NavbarLogo />
-        
-        {/* Center Nav Items */}
-        <nav className="flex items-center">
-          <div className="flex items-center gap-0.5 p-1 rounded-2xl bg-zinc-900/60 border border-zinc-800/50 backdrop-blur-sm">
+      {/* Desktop Navigation - Dynamic Island Style */}
+      <NavBody className="w-full px-0">
+        {/* Left: Logo */}
+        <div className="flex-1 flex items-center min-w-[120px]">
+          <NavbarLogo />
+        </div>
+
+        {/* Center: Dynamic Island Nav */}
+        <div className="flex-1 flex justify-center">
+          <motion.nav
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="relative flex items-center px-2 py-1 rounded-full bg-white/10 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/10"
+            style={{ minWidth: 320, maxWidth: 480 }}
+          >
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.link}
                 onMouseEnter={() => setHoveredItem(item.name)}
                 onMouseLeave={() => setHoveredItem(null)}
-                className="relative px-5 py-2 text-sm font-medium"
+                className="relative px-6 py-2 text-sm font-medium transition-colors duration-150"
               >
-                {/* Active Background - Static, no layoutId */}
+                {/* Active pill background */}
                 {isActive(item.link) && (
                   <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="absolute inset-0 rounded-xl bg-white/[0.08] border border-white/[0.08]"
+                    layoutId="nav-active-pill"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-[#14f195]/20 via-white/10 to-[#9945ff]/20 border border-white/20 shadow-md shadow-[#14f195]/10"
                   />
                 )}
-                
-                {/* Hover Indicator - Subtle underline effect */}
+                {/* Hover underline */}
                 {hoveredItem === item.name && !isActive(item.link) && (
                   <motion.div
-                    layoutId="nav-hover"
+                    layoutId="nav-hover-underline"
                     initial={{ opacity: 0, scaleX: 0.8 }}
                     animate={{ opacity: 1, scaleX: 1 }}
                     exit={{ opacity: 0, scaleX: 0.8 }}
-                    className="absolute inset-x-2 bottom-1 h-[2px] rounded-full bg-gradient-to-r from-transparent via-zinc-500 to-transparent"
-                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className="absolute left-4 right-4 bottom-1 h-[2px] rounded-full bg-gradient-to-r from-transparent via-[#14f195] to-transparent"
+                    transition={{ duration: 0.15, ease: 'easeOut' }}
                   />
                 )}
-                
-                {/* Text */}
-                <span className={`relative z-10 transition-colors duration-150 ${
-                  isActive(item.link) 
-                    ? "text-white" 
+                <span className={`relative z-10 ${
+                  isActive(item.link)
+                    ? "text-white font-semibold"
                     : hoveredItem === item.name
-                      ? "text-zinc-200"
-                      : "text-zinc-400"
+                      ? "text-[#14f195]"
+                      : "text-zinc-300"
                 }`}>
                   {item.name}
                 </span>
               </Link>
             ))}
-          </div>
-        </nav>
-        
-        {/* Right Side Actions */}
-        <div className="flex items-center gap-3">
-          {/* Auth Button */}
+          </motion.nav>
+        </div>
+
+        {/* Right: Actions */}
+        <div className="flex-1 flex items-center justify-end gap-3 min-w-[120px]">
           <AuthButton />
-          
-          {/* Wallet Button with custom wrapper */}
           {mounted && (
             <div className="wallet-wrapper">
               <WalletMultiButton />
@@ -125,7 +130,7 @@ export function Navbar() {
         </div>
       </NavBody>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation (unchanged) */}
       <MobileNav>
         <MobileNavHeader>
           <NavbarLogo />

@@ -18,55 +18,17 @@ interface NavbarProps {
 }
 
 export function Navbar({ children, className = "" }: NavbarProps) {
-  const [scrolled, setScrolled] = useState(false);
-  const [visible, setVisible] = useState(true);
-  const lastScrollY = useRef(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrolled(currentScrollY > 20);
-      lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
+  // No scroll logic, always visible, always transparent
   return (
-    <NavbarContext.Provider value={{ scrolled }}>
-      <motion.nav
-        initial={{ y: 0, opacity: 1 }}
-        animate={{ y: visible ? 0 : -100, opacity: visible ? 1 : 0 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 ${className}`}
-      >
-        <div 
-          className={`mx-auto transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            scrolled 
-              ? "max-w-4xl mt-3 px-2" 
-              : "max-w-7xl mt-0 px-4 sm:px-6 lg:px-8"
-          }`}
-        >
-          <div
-            className={`relative transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-              scrolled
-                ? "bg-[#0a0a0f]/90 backdrop-blur-2xl border border-white/[0.1] rounded-2xl shadow-2xl shadow-black/50 px-4 py-2"
-                : "bg-transparent border border-transparent rounded-2xl px-4 py-4"
-            }`}
-          >
-            {/* Gradient border glow when scrolled */}
-            {scrolled && (
-              <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-[#14f195]/30 via-transparent to-[#9945ff]/30 opacity-60 blur-sm pointer-events-none" />
-            )}
-            
-            <div className="relative z-10">
-              {children}
-            </div>
+    <nav className={`fixed top-0 left-0 right-0 z-50 ${className}`} style={{ background: "transparent", boxShadow: "none" }}>
+      <div className="mx-auto max-w-4xl mt-3 px-2">
+        <div className="relative border border-transparent rounded-2xl px-4 py-2 bg-transparent" style={{ background: "transparent" }}>
+          <div className="relative z-10">
+            {children}
           </div>
         </div>
-      </motion.nav>
-    </NavbarContext.Provider>
+      </div>
+    </nav>
   );
 }
 
@@ -148,87 +110,34 @@ interface NavbarLogoProps {
 }
 
 export function NavbarLogo({ className = "" }: NavbarLogoProps) {
-  const { scrolled } = useContext(NavbarContext);
-  
   return (
-    <Link href="/" className={`relative flex items-center gap-2.5 group ${className}`}>
-      {/* Logo Icon */}
-      <div className="relative">
-        {/* Glow effect */}
-        <div className={`absolute -inset-1 bg-gradient-to-br from-[#14f195] to-[#9945ff] rounded-lg blur-md transition-all duration-500 ${
-          scrolled ? "opacity-30 group-hover:opacity-60" : "opacity-40 group-hover:opacity-70"
-        }`} />
-        
-        {/* Logo container */}
-        <motion.div 
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.2 }}
-          className={`relative rounded-lg bg-[#0a0a0f] border border-[#14f195]/20 flex items-center justify-center shadow-lg transition-all duration-300 ${
-            scrolled ? "w-8 h-8" : "w-9 h-9"
-          }`}
-        >
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-[#14f195]/10 to-[#9945ff]/10" />
-          
-          {/* Custom S Logo */}
-          <svg 
-            className={`relative transition-all duration-300 ${scrolled ? "w-4 h-4" : "w-5 h-5"}`}
-            viewBox="0 0 24 24" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* Academic cap/mortarboard design integrated with S */}
-            <path 
-              d="M12 3L2 8L12 13L22 8L12 3Z" 
-              fill="url(#logo-gradient-1)"
-              stroke="url(#logo-gradient-2)"
-              strokeWidth="0.5"
-            />
-            <path 
-              d="M2 8V14C2 14 4 17 12 17C20 17 22 14 22 14V8" 
-              stroke="url(#logo-gradient-2)"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              fill="none"
-            />
-            {/* S letter formed by the design */}
-            <path 
-              d="M12 10C12 10 14 10.5 14 12C14 13.5 12 14 12 14C12 14 10 14 10 15.5C10 17 12 17.5 12 17.5" 
-              stroke="#14f195"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              fill="none"
-              opacity="0.9"
-            />
-            
-            {/* Gradients */}
-            <defs>
-              <linearGradient id="logo-gradient-1" x1="2" y1="3" x2="22" y2="13" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#14f195" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#9945ff" stopOpacity="0.3" />
-              </linearGradient>
-              <linearGradient id="logo-gradient-2" x1="2" y1="8" x2="22" y2="17" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#14f195" />
-                <stop offset="100%" stopColor="#00d4aa" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </motion.div>
-      </div>
-      
-      {/* Logo text */}
-      <motion.div 
-        className="flex flex-col"
-        animate={{ opacity: scrolled ? 0 : 1, width: scrolled ? 0 : "auto" }}
-        transition={{ duration: 0.3 }}
-      >
-        <span className="text-[16px] font-bold text-white tracking-[-0.03em] leading-tight whitespace-nowrap">
-          Scholr<span className="text-[#14f195]">Link</span>
-        </span>
-        <span className="text-[10px] text-zinc-500 font-medium tracking-wide hidden sm:block whitespace-nowrap">
-          Student Funding Protocol
-        </span>
-      </motion.div>
+    <Link href="/" className={`flex items-center gap-2.5 group ${className}`}>
+      <svg width="120" height="36" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="scholr-gradient-main" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#14f195" />
+            <stop offset="100%" stopColor="#9945ff" />
+          </linearGradient>
+          <linearGradient id="scholr-gradient-secondary" x1="2" y1="8" x2="22" y2="17" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#14f195" />
+            <stop offset="100%" stopColor="#00d4aa" />
+          </linearGradient>
+          <filter id="glow" x="-10" y="-10" width="60" height="60" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <g transform="translate(4, 13)">
+          <path d="M12 3L2 8L12 13L22 8L12 3Z" fill="url(#scholr-gradient-main)" stroke="url(#scholr-gradient-secondary)" strokeWidth="0.5" opacity="0.9"/>
+          <path d="M2 8V14C2 14 4 17 12 17C20 17 22 14 22 14V8" stroke="url(#scholr-gradient-secondary)" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+          <path d="M12 10C12 10 14 10.5 14 12C14 13.5 12 14 12 14C12 14 10 14 10 15.5C10 17 12 17.5 12 17.5" stroke="#14f195" strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+        </g>
+        <text x="40" y="32" fontFamily="'DM Sans', sans-serif" fontWeight="700" fontSize="24" letterSpacing="-0.03em" fill="white">Scholr</text>
+        <text x="112" y="32" fontFamily="'DM Sans', sans-serif" fontWeight="700" fontSize="24" letterSpacing="-0.03em" fill="#14f195">Link</text>
+      </svg>
     </Link>
   );
 }

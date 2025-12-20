@@ -1,7 +1,9 @@
 import dynamic from "next/dynamic";
 import * as anchor from "@coral-xyz/anchor";
 import scholrIdl from "@/idl/scholr_program.json" assert { type: "json" };
-import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
+import { clusterApiUrl, Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { optionalEnv } from "@/lib/env";
+import { tryGetAdminSupabase } from "@/lib/supabase";
 
 // Lazy load CampaignCard for better performance
 const CampaignCard = dynamic(() => import("@/components/CampaignCard").then(mod => ({ default: mod.CampaignCard })), {
@@ -13,8 +15,8 @@ interface Campaign {
   slug: string;
   title: string;
   description: string;
-  goal: number;
-  raised: number;
+  goal: number; // SOL
+  raised: number; // SOL
   creator: string;
   category: string;
 }
@@ -29,9 +31,9 @@ const CATEGORIES = [
 ];
 
 async function fetchCampaigns(): Promise<Campaign[]> {
-  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+  const rpcUrl = optionalEnv("SOLANA_RPC_URL", clusterApiUrl("devnet"));
+  const connection = new Connection(rpcUrl, "confirmed");
 
-  // Dummy wallet provider for read-only
   const provider = new anchor.AnchorProvider(
     connection,
     {
@@ -42,21 +44,53 @@ async function fetchCampaigns(): Promise<Campaign[]> {
     { preflightCommitment: "confirmed" }
   );
 
-  const program = new anchor.Program(
-    scholrIdl as anchor.Idl,
-    provider
-  );
+  const program = new anchor.Program(scholrIdl as anchor.Idl, provider);
+  const supabase = tryGetAdminSupabase();
 
-  const all = await (program.account as any)["campaign"].all();
-  return all.map(({ publicKey, account }: any) => ({
-    slug: publicKey.toBase58(),
-    title: account.title as string,
-    description: (account.metadataUri as string) ?? "",
-    goal: Number(account.goal),
-    raised: Number(account.raised),
-    creator: (account.authority as anchor.web3.PublicKey).toBase58(),
-    category: "Research",
-  }));
+  const [onchain, supaData] = await Promise.all([
+    (program.account as any)["campaign"].all(),
+    supabase
+      ? supabase
+          .from("campaigns")
+          .select("pda, title, metadata_uri, goal_lamports, category, creator")
+          .order("created_at", { ascending: false })
+      : Promise.resolve({ data: null, error: null } as any),
+  ]);
+
+  const onchainMap = new Map<string, any>();
+  onchain.forEach(({ publicKey, account }: any) => {
+    onchainMap.set(publicKey.toBase58(), account);
+  });
+
+  const merged: Campaign[] = (supaData?.data ?? []).map((row: any) => {
+    const account = onchainMap.get(row.pda);
+    return {
+      slug: row.pda,
+      title: row.title,
+      description: row.metadata_uri ?? "",
+      goal: (account?.goal ?? row.goal_lamports ?? 0) / LAMPORTS_PER_SOL,
+      raised: (account?.raised ?? 0) / LAMPORTS_PER_SOL,
+      creator: row.creator,
+      category: row.category ?? "Research",
+    };
+  });
+
+  // Include any on-chain-only campaigns that aren't in Supabase
+  onchain.forEach(({ publicKey, account }: any) => {
+    if (!merged.find((c) => c.slug === publicKey.toBase58())) {
+      merged.push({
+        slug: publicKey.toBase58(),
+        title: account.title as string,
+        description: (account.metadataUri as string) ?? "",
+        goal: Number(account.goal) / LAMPORTS_PER_SOL,
+        raised: Number(account.raised) / LAMPORTS_PER_SOL,
+        creator: (account.authority as anchor.web3.PublicKey).toBase58(),
+        category: "Research",
+      });
+    }
+  });
+
+  return merged;
 }
 
 export default async function ExplorePage() {

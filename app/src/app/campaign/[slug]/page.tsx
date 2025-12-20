@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import * as anchor from "@coral-xyz/anchor";
 import scholrIdl from "@/idl/scholr_program.json" assert { type: "json" };
-import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
+import { clusterApiUrl, Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { optionalEnv } from "@/lib/env";
 import { CampaignClient } from "./CampaignClient";
 
 async function fetchCampaignByPda(pdaStr: string) {
@@ -13,7 +14,8 @@ async function fetchCampaignByPda(pdaStr: string) {
     return null;
   }
 
-  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+  const rpcUrl = optionalEnv("SOLANA_RPC_URL", clusterApiUrl("devnet"));
+  const connection = new Connection(rpcUrl, "confirmed");
   const provider = new anchor.AnchorProvider(
     connection,
     {
@@ -30,12 +32,15 @@ async function fetchCampaignByPda(pdaStr: string) {
 
   try {
     const account = await (program.account as any)["campaign"].fetch(pda);
+    const goalSol = Number(account.goal) / LAMPORTS_PER_SOL;
+    const raisedSol = Number(account.raised) / LAMPORTS_PER_SOL;
+
     return {
       pda: pdaStr,
       title: account.title as string,
       description: (account.metadataUri as string) ?? "",
-      goal: Number(account.goal),
-      raised: Number(account.raised),
+      goal: goalSol,
+      raised: raisedSol,
       creator: (account.authority as anchor.web3.PublicKey).toBase58(),
       category: "Research",
     };

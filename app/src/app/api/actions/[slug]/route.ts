@@ -15,9 +15,9 @@ import * as anchor from "@coral-xyz/anchor";
 import scholrIdl from "@/idl/scholr_program.json" assert { type: "json" };
 import { TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { optionalEnv } from "@/lib/env";
 
-// Devnet connection
-const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+const connection = new Connection(optionalEnv("SOLANA_RPC_URL", clusterApiUrl("devnet")) || clusterApiUrl("devnet"), "confirmed");
 const programId = new PublicKey((scholrIdl as any).address);
 
 function getCampaignPda(authority: PublicKey, title: string): PublicKey {
@@ -63,13 +63,15 @@ export async function GET(
     authority: (decoded.authority as PublicKey).toBase58(),
   };
 
-  const percentRaised = Math.round((campaign.raised / campaign.goal) * 100);
+  const raisedSol = campaign.raised / LAMPORTS_PER_SOL;
+  const goalSol = Math.max(campaign.goal, 1) / LAMPORTS_PER_SOL;
+  const percentRaised = campaign.goal > 0 ? Math.round((campaign.raised / campaign.goal) * 100) : 0;
   
   const payload: ActionGetResponse = {
     type: "action",
     icon: "https://raw.githubusercontent.com/nicosantangelo/Solana-Buttons/master/docs/images/blink-preview.png",
     title: campaign.title,
-    description: `${campaign.description}\n\n💰 ${campaign.raised} SOL / ${campaign.goal} SOL raised (${percentRaised}%)`,
+    description: `${campaign.description}\n\n💰 ${raisedSol.toFixed(2)} SOL / ${goalSol.toFixed(2)} SOL raised (${percentRaised}%)`,
     label: "Fund this project",
     links: {
       actions: [

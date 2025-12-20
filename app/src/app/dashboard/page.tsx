@@ -26,33 +26,18 @@ const USER_STATS = {
   patronTier: "Gold",
 };
 
-// Mock user campaigns (seed)
-const SEED_CAMPAIGNS = [
-  {
-    slug: "rust-os",
-    title: "Rust OS Kernel Project",
-    description: "Building a minimal OS kernel in Rust for my final year project.",
-    goal: 10,
-    raised: 7.5,
-    donors: 12,
-    status: "active",
-    daysLeft: 14,
-    category: "Engineering",
-    createdAt: "2024-01-15",
-  },
-  {
-    slug: "quantum-sim",
-    title: "Quantum Computing Simulator",
-    description: "Educational quantum circuit simulator for students.",
-    goal: 22.5,
-    raised: 22.5,
-    donors: 28,
-    status: "completed",
-    daysLeft: 0,
-    category: "Research",
-    createdAt: "2023-11-20",
-  },
-];
+type StoredCampaign = {
+  slug: string;
+  title: string;
+  description: string;
+  goal: number;
+  raised: number;
+  donors: number;
+  status: "active" | "completed" | "pending";
+  daysLeft: number;
+  category: string;
+  createdAt: string;
+};
 
 // Mock donation history with badges
 const MY_DONATIONS = [
@@ -95,43 +80,29 @@ type TabType = "overview" | "campaigns" | "donations" | "create";
 export default function DashboardPage() {
   const { connected, publicKey } = useWallet();
   const [activeTab, setActiveTab] = useState<TabType>("overview");
-  const [myCampaigns, setMyCampaigns] = useState<typeof SEED_CAMPAIGNS>([]);
-  const [hasLoadedFromStorage, setHasLoadedFromStorage] = useState(false);
+  const [myCampaigns, setMyCampaigns] = useState<StoredCampaign[]>([]);
+  const [loadingCampaigns, setLoadingCampaigns] = useState(false);
 
-  // Load campaigns from localStorage when wallet connects/changes
+  // Load campaigns for this wallet from API
   useEffect(() => {
-    if (publicKey && typeof window !== 'undefined') {
-      const storageKey = `campaigns_${publicKey.toBase58()}`;
-      const stored = localStorage.getItem(storageKey);
-      console.log("Loading campaigns from localStorage:", storageKey, stored);
-      if (stored) {
-        try {
-          const campaigns = JSON.parse(stored);
-          console.log("Loaded campaigns:", campaigns);
-          setMyCampaigns(campaigns);
-          setHasLoadedFromStorage(true);
-        } catch (e) {
-          console.error("Failed to parse stored campaigns:", e);
-          setMyCampaigns([]);
-          setHasLoadedFromStorage(true);
-        }
-      } else {
-        // No stored campaigns, start with empty array for new wallet
-        console.log("No stored campaigns found, starting fresh");
+    const fetchCampaigns = async () => {
+      if (!publicKey) return;
+      setLoadingCampaigns(true);
+      try {
+        const res = await fetch(`/api/user-campaigns?user=${publicKey.toBase58()}`);
+        if (!res.ok) throw new Error(`Failed to load campaigns: ${res.status}`);
+        const json = await res.json();
+        setMyCampaigns(json.campaigns ?? []);
+      } catch (e) {
+        console.error("Failed to load campaigns", e);
         setMyCampaigns([]);
-        setHasLoadedFromStorage(true);
+      } finally {
+        setLoadingCampaigns(false);
       }
-    }
-  }, [publicKey]);
+    };
 
-  // Save campaigns to localStorage whenever they change (but only after initial load)
-  useEffect(() => {
-    if (publicKey && typeof window !== 'undefined' && hasLoadedFromStorage) {
-      const storageKey = `campaigns_${publicKey.toBase58()}`;
-      console.log("Saving campaigns to localStorage:", storageKey, myCampaigns);
-      localStorage.setItem(storageKey, JSON.stringify(myCampaigns));
-    }
-  }, [myCampaigns, publicKey, hasLoadedFromStorage]);
+    fetchCampaigns();
+  }, [publicKey]);
 
   const tabs = [
     { id: "overview" as TabType, label: "Overview", icon: "grid" },
@@ -327,7 +298,10 @@ export default function DashboardPage() {
                       </button>
                     </div>
                     <div className="divide-y divide-white/[0.04]">
-                      {myCampaigns.slice(0, 2).map((campaign) => (
+                      {loadingCampaigns && (
+                        <div className="p-4 text-sm text-zinc-500">Loading campaigns…</div>
+                      )}
+                      {!loadingCampaigns && myCampaigns.slice(0, 2).map((campaign) => (
                         <div key={campaign.slug} className="p-4 sm:p-5 hover:bg-white/[0.02] transition-colors">
                           <div className="flex items-start justify-between gap-3 mb-3">
                             <div className="flex-1 min-w-0">
@@ -339,14 +313,14 @@ export default function DashboardPage() {
                                 ? "bg-[#14f195]/15 text-[#14f195]" 
                                 : "bg-zinc-800 text-zinc-400"
                             }`}>
-                              {campaign.status === "active" ? `${campaign.daysLeft}d left` : "Completed"}
+                              {campaign.status === "active" ? `${campaign.daysLeft}d left` : campaign.status}
                             </span>
                           </div>
                           {/* Progress bar */}
                           <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                             <div
                               className="h-full bg-gradient-to-r from-[#14f195] to-[#9945ff] rounded-full transition-all"
-                              style={{ width: `${Math.min((campaign.raised / campaign.goal) * 100, 100)}%` }}
+                              style={{ width: `${campaign.goal > 0 ? Math.min((campaign.raised / campaign.goal) * 100, 100) : 0}%` }}
                             />
                           </div>
                           <div className="flex items-center justify-between mt-2">
@@ -462,7 +436,10 @@ export default function DashboardPage() {
 
                 {/* Campaign List */}
                 <div className="space-y-4">
-                  {myCampaigns.map((campaign) => (
+                  {loadingCampaigns && (
+                    <div className="glass-card rounded-xl p-4 text-sm text-zinc-500">Loading campaigns…</div>
+                  )}
+                  {!loadingCampaigns && myCampaigns.map((campaign) => (
                     <div key={campaign.slug} className="glass-card rounded-xl sm:rounded-2xl p-5 sm:p-6 hover:border-white/10 transition-all">
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
                         <div className="flex-1">
@@ -498,12 +475,12 @@ export default function DashboardPage() {
                         <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
                           <div
                             className="h-full bg-gradient-to-r from-[#14f195] to-[#9945ff] rounded-full transition-all"
-                            style={{ width: `${Math.min((campaign.raised / campaign.goal) * 100, 100)}%` }}
+                            style={{ width: `${campaign.goal > 0 ? Math.min((campaign.raised / campaign.goal) * 100, 100) : 0}%` }}
                           />
                         </div>
                         <div className="flex items-center justify-between mt-2">
                           <span className="text-[13px] font-medium text-white">{campaign.raised} SOL <span className="text-zinc-500">of {campaign.goal} SOL</span></span>
-                          <span className="text-[13px] text-zinc-500">{Math.round((campaign.raised / campaign.goal) * 100)}%</span>
+                          <span className="text-[13px] text-zinc-500">{campaign.goal > 0 ? Math.round((campaign.raised / campaign.goal) * 100) : 0}%</span>
                         </div>
                       </div>
 
