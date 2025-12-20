@@ -31,7 +31,7 @@ const CATEGORIES = [
 ];
 
 async function fetchCampaigns(): Promise<Campaign[]> {
-  const rpcUrl = optionalEnv("SOLANA_RPC_URL", clusterApiUrl("devnet"));
+  const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://api.devnet.solana.com";
   const connection = new Connection(rpcUrl, "confirmed");
 
   const provider = new anchor.AnchorProvider(

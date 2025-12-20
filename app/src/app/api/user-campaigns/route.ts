@@ -8,7 +8,7 @@ import { optionalEnv } from "@/lib/env";
 
 export const runtime = "nodejs";
 
-const rpcUrl = optionalEnv("SOLANA_RPC_URL", clusterApiUrl("devnet"));
+const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://api.devnet.solana.com";
 
 const upsertSchema = z.object({
   slug: z.string().min(32).max(64), // PDA
